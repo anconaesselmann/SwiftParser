@@ -101,6 +101,7 @@ class PDAutomatonTests: XCTestCase {
         let accepting = machine.run()
         XCTAssertEqual(accepting, true)
         XCTAssertEqual(tape.position, 4)
+        XCTAssertEqual(machine.matchPos, 0)
     }
     func testRegExStateBuilderRunTwice() {
         let reg     = RegExBuilder(regExString: "abcd")
@@ -110,10 +111,12 @@ class PDAutomatonTests: XCTestCase {
         var accepting = machine.run()
         XCTAssert(machine.accepting == true)
         XCTAssert(tape.position == 4)
-        XCTAssertEqual(machine.step()!.accepting, false)
+        XCTAssertEqual(machine.matchPos, 0)
+        tape.position = 4
         accepting = machine.run()
         XCTAssertEqual(accepting, true)
         XCTAssertEqual(tape.position, 8)
+        XCTAssertEqual(machine.matchPos, 4)
     }
     
     func testRegExStateBuilder_resetWhenNotMatching() {
@@ -124,6 +127,7 @@ class PDAutomatonTests: XCTestCase {
         let accepting = machine.run()
         XCTAssertEqual(accepting, false)
         XCTAssertEqual(tape.position, 0)
+        XCTAssertEqual(machine.matchPos, nil)
     }
     
     func testRegExStateBuilderTapeNotAtBeginning_resetWhenNotMatching() {
@@ -135,7 +139,8 @@ class PDAutomatonTests: XCTestCase {
         let accepting = machine.run()
         XCTAssertEqual(accepting, false)
         XCTAssertEqual(tape.position, 2)
-        print(machine)
+        XCTAssertEqual(machine.matchPos, nil)
+//        print(machine)
     }
     
     
@@ -235,6 +240,7 @@ class PDAutomatonTests: XCTestCase {
         let accepting = machine.run()
         XCTAssertEqual(accepting, true)
         XCTAssertEqual(tape.position, 3)
+        XCTAssertEqual(machine.matchPos, 0)
     }
     
     func testRegExStateBuilder_testOrWithExplicitCharacters_failing() {
@@ -246,7 +252,10 @@ class PDAutomatonTests: XCTestCase {
         let accepting = machine.run()
         XCTAssertEqual(accepting, false)
         XCTAssertEqual(tape.position, 0)
+        XCTAssertEqual(machine.matchPos, nil)
     }
+    
+    
     
     
     

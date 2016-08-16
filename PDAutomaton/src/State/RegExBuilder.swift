@@ -11,18 +11,24 @@ class RegExBuilder {
             record: StackRecord(
                 data: nil,
                 pushChar: CharToken(char: "["),
-                popChar: CharToken(char: "]")
+                popChar:  CharToken(char: "]")
             )
         )
         machine.addStackSymbol(
             record: StackRecord(
                 data: nil,
                 pushChar: CharToken(char: "("),
-                popChar: CharToken(char: ")")
+                popChar:  CharToken(char: ")")
             )
         )
         machine.addState(state: initial)
         originState = initial;
+        if regExString[regExString.startIndex] == "^" {
+            let secondChar = regExString.index(regExString.startIndex, offsetBy: 1)
+            regExString = regExString.substring(from: secondChar)
+        } else {
+            machine.matchBeginning = false
+        }
     }
     private var originState:State!
     private var linkStates = true

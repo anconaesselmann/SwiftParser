@@ -5,6 +5,7 @@ class FSMachine {
     var states = [State]()
     var finalState:State?
     var currentState:State?
+    var matchBeginning = true
     var tape:Tape! {
         didSet {
             reset()
@@ -12,7 +13,12 @@ class FSMachine {
     }
     var accepting:Bool = false
     private var _tapePos:Int = 0
+    var matchPos:Int?
     
+    init() {
+        self.name = ""
+        self.tape = nil
+    }
     init(name:String) {
         self.name = name
     }
@@ -24,18 +30,33 @@ class FSMachine {
         states.append(state)
     }
     
-    func run() -> Bool {
+    private func _runMatchBeginning() -> Bool {
         if finalState == nil {
             while let _ = step() {}
             finalState = currentState
+            matchPos   = accepting ? _tapePos : nil
         }
         return accepting
+    }
+    private func _runMatchLeftMost() -> Bool {
+        let prevTapePos = tape.position
+        var tapePos = tape.position
+        while !tape.eof {
+            tape.position = tapePos
+            if _runMatchBeginning() { return true }
+            tapePos += 1
+        }
+        tape.position = prevTapePos
+        return false
+    }
+    func run() -> Bool {
+        return matchBeginning ? _runMatchBeginning() : _runMatchLeftMost()
     }
     func step() -> State? {
         guard !tape.eof else {return nil}
         if currentState == nil {
             currentState = states[0]
-            _tapePos = tape.position
+            _tapePos     = tape.position
         }
         let token = tape.get()!
         guard currentState != nil else {return nil}
@@ -66,6 +87,7 @@ class FSMachine {
     func reset() {
         currentState = nil
         _tapePos     = 0
+        matchPos     = nil
         accepting    = false
     }
 }

@@ -7,6 +7,9 @@ class StringTape {
     init(string: String) {
         self.string = string
     }
+    init() {
+        self.string = ""
+    }
     
     private var _pos = 0
     private var _eof:Bool = false

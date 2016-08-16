@@ -24,6 +24,8 @@
 		9722FC6C1D5C157B0025A91D /* StringTape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722FC5A1D5C157B0025A91D /* StringTape.swift */; };
 		9722FC6D1D5C157B0025A91D /* Tape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722FC5B1D5C157B0025A91D /* Tape.swift */; };
 		9722FC6E1D5C157B0025A91D /* CharToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722FC5D1D5C157B0025A91D /* CharToken.swift */; };
+		976A37231D628516004283F3 /* RegEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976A37221D628516004283F3 /* RegEx.swift */; };
+		976A37251D628AD2004283F3 /* RegExTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976A37241D628AD2004283F3 /* RegExTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +60,8 @@
 		9722FC5A1D5C157B0025A91D /* StringTape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringTape.swift; sourceTree = "<group>"; };
 		9722FC5B1D5C157B0025A91D /* Tape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tape.swift; sourceTree = "<group>"; };
 		9722FC5D1D5C157B0025A91D /* CharToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharToken.swift; sourceTree = "<group>"; };
+		976A37221D628516004283F3 /* RegEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegEx.swift; sourceTree = "<group>"; };
+		976A37241D628AD2004283F3 /* RegExTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegExTests.swift; path = PDAutomatonTests/RegExTests.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +116,7 @@
 		9722FC3C1D5C153D0025A91D /* PDAutomatonTests */ = {
 			isa = PBXGroup;
 			children = (
+				976A37241D628AD2004283F3 /* RegExTests.swift */,
 				9722FC3D1D5C153D0025A91D /* PDAutomatonTests.swift */,
 				9722FC3F1D5C153D0025A91D /* Info.plist */,
 			);
@@ -128,6 +133,7 @@
 				9722FC541D5C157B0025A91D /* State */,
 				9722FC591D5C157B0025A91D /* Tape */,
 				9722FC5C1D5C157B0025A91D /* Token */,
+				976A37221D628516004283F3 /* RegEx.swift */,
 			);
 			name = src;
 			path = PDAutomaton/src;
@@ -272,6 +278,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				976A37231D628516004283F3 /* RegEx.swift in Sources */,
 				9722FC651D5C157B0025A91D /* PDAutomaton.swift in Sources */,
 				9722FC671D5C157B0025A91D /* StackRecord.swift in Sources */,
 				9722FC691D5C157B0025A91D /* State.swift in Sources */,
@@ -294,6 +301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9722FC3E1D5C153D0025A91D /* PDAutomatonTests.swift in Sources */,
+				976A37251D628AD2004283F3 /* RegExTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -482,6 +490,7 @@
 				9722FC441D5C153D0025A91D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9722FC451D5C153D0025A91D /* Build configuration list for PBXNativeTarget "PDAutomatonTests" */ = {
 			isa = XCConfigurationList;
@@ -490,6 +499,7 @@
 				9722FC471D5C153D0025A91D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
