@@ -14,20 +14,8 @@ class PDAutomaton: FSMachine {
     func pop() -> StackRecord {
         return stack.pop()
     }
-    func isPushSymbol(token: CharToken) -> StackRecord? {
-        for symbol in stackSymbols {
-            if token == symbol.pushChar {
-                return symbol
-            }
-        }
-        return nil
-    }
-    func isPopSymbol(token: CharToken) -> StackRecord? {
-        for symbol in stackSymbols {
-            if token == symbol.popChar {
-                return symbol
-            }
-        }
-        return nil
-    }
+}
+// NondeterministicPushDownAutomaton
+class NPDAutomaton: PDAutomaton {
+    
 }

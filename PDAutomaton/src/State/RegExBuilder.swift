@@ -135,9 +135,7 @@ extension RegExBuilder: StateBuilder {
     
     
     private func _zeroOrMoreAction() {
-        print("*")
         zeroOrMore = true
-        print("end")
     }
     private func _oneOrMoreAction() {
         
