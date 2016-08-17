@@ -13,6 +13,12 @@ class RegExTests: XCTestCase {
         let match         = re.match(pattern: "a[bc]d", subject: "acdefg")
         XCTAssertEqual(match, expected)
     }
+    func test_orWithMultipleChars() {
+        let expected:Int? = 0
+        let match         = re.match(pattern: "am[bcxyz]d", subject: "amydefg")
+        XCTAssertEqual(re.machine.states.count, 4)
+        XCTAssertEqual(match, expected)
+    }
     func test_simpleOr_noMatch() {
         let expected:Int? = nil
         let match         = re.match(pattern: "a[bc]d", subject: "addefg")
@@ -48,7 +54,7 @@ class RegExTests: XCTestCase {
         XCTAssertEqual(match, expected)
     }
     func test_combiningRegexesByStringConcatination_withOverloadedConcatenationOperators() {
-        var re1 = RegEx(pattern: "a")
+        let re1 = RegEx(pattern: "a")
         let re2 = RegEx(pattern: "[bc]")
         re1 += re2
         re1 += "d"
@@ -67,6 +73,27 @@ class RegExTests: XCTestCase {
         let match         = re.match(subject: "acacdefg")
         XCTAssertEqual(match, expected)
     }
-
-    
+    func test_oneOrMoreOrs() {
+        re.pattern = "a[bc]*d"
+        XCTAssertEqual(re.machine.states.count, 2)
+        print(re.machine!)
+        var match:Int?
+        match = re.match(subject: "dada")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.position, 3)
+        match = re.match(subject: "dacda")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.position, 4)
+        match = re.match(subject: "dacbbbbbbcda")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.position, 11)
+        match = re.match(subject: "bdda")
+        XCTAssertEqual(match, nil)
+        match = re.match(subject: "daa")
+        XCTAssertEqual(match, nil)
+        match = re.match(subject: "ac")
+        XCTAssertEqual(match, nil)
+        match = re.match(subject: "acc")
+        XCTAssertEqual(match, nil)
+    }
 }

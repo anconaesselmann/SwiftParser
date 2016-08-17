@@ -1,11 +1,15 @@
 import Foundation
 
 class RegExBuilder {
+    typealias ActionFunction = () -> Void
+    
+    var machine:PDAutomaton!
     var regExString:String = ""
     init(regExString:String) {
         self.regExString = regExString
     }
     private func _initiate(machine:PDAutomaton) {
+        self.machine = machine
         let initial = State();
         machine.addStackSymbol(
             record: StackRecord(
@@ -21,54 +25,130 @@ class RegExBuilder {
                 popChar:  CharToken(char: ")")
             )
         )
-        machine.addState(state: initial)
-        originState = initial;
+        originState = initial
+        targetState = initial
         if regExString[regExString.startIndex] == "^" {
             let secondChar = regExString.index(regExString.startIndex, offsetBy: 1)
             regExString = regExString.substring(from: secondChar)
         } else {
             machine.matchBeginning = false
         }
+        _actions["["] = _initSquareOrAction
+        _actions["]"] = _finishSquareOrAction
+        _actions["*"] = _zeroOrMoreAction
+        _actions["+"] = _oneOrMoreAction
+        _actions["?"] = _optionalAction
+        _actions["{"] = _initRepetitionAction
+        _actions["}"] = _finishRepetitionAction
     }
     private var originState:State!
-    private var linkStates = true
     private var targetState:State!
+    private var linkStates = true
+    private var zeroOrMore = false
+    private var _currentTriggers:[Acceptable] = []
+    private var _actions:[Character:ActionFunction] = [:]
 }
 extension RegExBuilder: StateBuilder {
-    func compile(machine:FSMachine) {
-        guard let machine = machine as? PDAutomaton else {return}
-        _initiate(machine: machine)
-        
-        for char in regExString.characters {
-            var state:State
-            if linkStates {
-                state = State();
-            } else {
-                state = targetState
-            }
-            let token = CharToken(char: char)
-            if let stackRecord = machine.isPushSymbol(token: token) {
-                machine.push(record: stackRecord)
-                if stackRecord.pushChar!.char == "[" {
-                    linkStates = false
-                    targetState = state
-                }
-            } else if let stackRecord = machine.isPopSymbol(token: token) {
-                let _ = machine.pop()
-                if stackRecord.popChar!.char == "]" {
-                    linkStates = true
-                    machine.addState(state: targetState)
-                    originState = targetState
-                }
-            } else {
-                originState.addTransition(transition: Transition(targetState: state, trigger:token))
-                if linkStates {
-                    machine.addState(state: state)
-                    originState = state
-                }
-            }
-            
+    private func _initSquareOrAction() {
+        _commitPreviousTransactions()
+        machine.push(record:
+            StackRecord(
+                data: nil,
+                pushChar: CharToken(char:"["),
+                popChar: CharToken(char:"]")
+            )
+        )
+        linkStates = false
+    }
+    private func _finishSquareOrAction() {
+        let _      = machine.pop()
+        linkStates = true
+    }
+    private func _commitPreviousTransactions() {
+        guard linkStates else {return}
+        guard _currentTriggers.count > 0 else {return}
+        _setTargetState()
+        for trigger in _currentTriggers {
+            originState.addTransition(transition: Transition(targetState: targetState, trigger:trigger))
         }
+        if originState !== targetState {
+             machine.addState(state: originState)
+        }
+        originState      = targetState
+        _currentTriggers = []
+    }
+    private func _setTargetState() {
+        if zeroOrMore {
+            zeroOrMore = false
+        } else {
+            targetState = State()
+        }
+        
+    }
+    private func _stageTransition(char:Character) {
+        _currentTriggers.append(CharToken(char: char))
+    }
+    func compile(machine:FSMachine) -> Bool {
+        guard let machine = machine as? PDAutomaton else {return false}
+        _initiate(machine: machine)
+        for char in regExString.characters {
+            if _isSpecialSymbol(char: char) {
+                guard let actionFunction = _actions[char] else {return false}
+                actionFunction()
+            } else {
+                _commitPreviousTransactions()
+                _stageTransition(char: char)
+            }
+        }
+        _commitPreviousTransactions()
+        _setAcceptingStates()
+        return true
+    }
+    
+    
+    
+    
+    
+    
+    private func _setAcceptingStates() {
         originState.accepting = true
+    }
+    private func _isSpecialSymbol(char: Character) -> Bool {
+        for stackSymbol in machine.stackSymbols {
+            if char == stackSymbol.pushChar?.char ||
+                char == stackSymbol.popChar?.char
+            {
+                return true
+            }
+        }
+        switch char {
+        case "*":
+            return true
+        case "+":
+            return true
+        case "?":
+            return true
+        default:
+            return false
+        }
+    }
+    
+    
+    private func _zeroOrMoreAction() {
+        print("*")
+        zeroOrMore = true
+        print("end")
+    }
+    private func _oneOrMoreAction() {
+        
+    }
+    private func _optionalAction() {
+        
+    }
+    private func _initRepetitionAction() {
+        
+    }
+    private func _finishRepetitionAction() {
+        
     }
 }

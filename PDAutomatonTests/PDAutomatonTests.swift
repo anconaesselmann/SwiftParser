@@ -97,7 +97,8 @@ class PDAutomatonTests: XCTestCase {
         let reg     = RegExBuilder(regExString: "abcd")
         let tape    = StringTape(string: "abcdefg")
         let machine = PDAutomaton(name: "abcd", tape: tape)
-        reg.compile(machine: machine)
+        let compiled = reg.compile(machine: machine)
+        XCTAssertEqual(compiled, true)
         let accepting = machine.run()
         XCTAssertEqual(accepting, true)
         XCTAssertEqual(tape.position, 4)
@@ -107,7 +108,8 @@ class PDAutomatonTests: XCTestCase {
         let reg     = RegExBuilder(regExString: "abcd")
         let tape    = StringTape(string: "abcdabcd")
         let machine = PDAutomaton(name: "abcd", tape: tape)
-        reg.compile(machine: machine)
+        let compiled = reg.compile(machine: machine)
+        XCTAssert(compiled)
         var accepting = machine.run()
         XCTAssert(machine.accepting == true)
         XCTAssert(tape.position == 4)
@@ -123,7 +125,8 @@ class PDAutomatonTests: XCTestCase {
         let reg     = RegExBuilder(regExString: "abcd")
         let tape    = StringTape(string: "abcefg")
         let machine = PDAutomaton(name: "abcd", tape: tape)
-        reg.compile(machine: machine)
+        let compiled = reg.compile(machine: machine)
+        XCTAssert(compiled)
         let accepting = machine.run()
         XCTAssertEqual(accepting, false)
         XCTAssertEqual(tape.position, 0)
@@ -135,7 +138,8 @@ class PDAutomatonTests: XCTestCase {
         let tape    = StringTape(string: "ababce")
         tape.position = 2
         let machine = PDAutomaton(name: "abcd", tape: tape)
-        reg.compile(machine: machine)
+        let compiled = reg.compile(machine: machine)
+        XCTAssert(compiled)
         let accepting = machine.run()
         XCTAssertEqual(accepting, false)
         XCTAssertEqual(tape.position, 2)
@@ -235,7 +239,8 @@ class PDAutomatonTests: XCTestCase {
         let reg     = RegExBuilder(regExString: "a[bc]d")
         let tape    = StringTape(string: "abdefg")
         let machine = PDAutomaton(name: "abd", tape: tape)
-        reg.compile(machine: machine)
+        let compiled = reg.compile(machine: machine)
+        XCTAssert(compiled)
         print(machine)
         let accepting = machine.run()
         XCTAssertEqual(accepting, true)
@@ -247,7 +252,8 @@ class PDAutomatonTests: XCTestCase {
         let reg     = RegExBuilder(regExString: "a[bc]d")
         let tape    = StringTape(string: "addefg")
         let machine = PDAutomaton(name: "add", tape: tape)
-        reg.compile(machine: machine)
+        let compiled = reg.compile(machine: machine)
+        XCTAssert(compiled)
         print(machine)
         let accepting = machine.run()
         XCTAssertEqual(accepting, false)
@@ -259,24 +265,7 @@ class PDAutomatonTests: XCTestCase {
     
     
     
-    //    func testRegExStateBuilder_square_brackets_characters() {
-    //        let reg     = RegExBuilder(regExString: "a[bc]d")
-    //        let tape    = StringTape(string: "abdfg")
-    //        let machine = FSMachine(name: "abcd", tape: tape)
-    //        reg.compile(machine: machine)
-    //        print(machine)
-    //        var accepting = machine.run()
-    //        XCTAssertEqual(accepting, true)
-    //        XCTAssertEqual(tape.position, 3)
-    //        tape.string = "acdfg"
-    //        accepting = machine.run()
-    //        XCTAssertEqual(accepting, true)
-    //        XCTAssertEqual(tape.position, 3)
-    //        tape.string = "addfg"
-    //        accepting = machine.run()
-    //        XCTAssertEqual(accepting, false)
-    //        XCTAssertEqual(tape.position, 0)
-    //    }
+
     
     
 }
