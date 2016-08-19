@@ -8,7 +8,121 @@ class RegExBuilder {
     init(regExString:String) {
         self.regExString = regExString
     }
-    private func _initiate(machine:NPDAutomaton) {
+    private var originState:State!
+    private var targetState:State!
+    private var linkStates = true
+    private var zeroOrMore = false
+    private var _currentTriggers:[Acceptable] = []
+    private var _actions:[Character:ActionFunction] = [:]
+}
+extension RegExBuilder: StateBuilder {
+    func compile(machine:Automaton) -> Bool {
+        guard let machine = machine as? NPDAutomaton else {return false}
+        _initiate(machine: machine)
+        for char in regExString.characters {
+            if _isSpecialSymbol(char: char) {
+                guard let actionFunction = _actions[char] else {return false}
+                actionFunction()
+            } else {
+                _commitPreviousTransactions()
+                _stageTransition(char: char)
+            }
+        }
+        _commitPreviousTransactions()
+        _setAcceptingStates()
+        machine.append(state: targetState)
+        machine.reset()
+        return true
+    }
+}
+private extension RegExBuilder {
+    func _initSquareOrAction() {
+        _commitPreviousTransactions()
+        machine.push(record:
+            StackRecord(
+                data: nil,
+                pushChar: CharToken(char:"["),
+                popChar: CharToken(char:"]")
+            )
+        )
+        linkStates = false
+    }
+    func _finishSquareOrAction() {
+        let _      = machine.pop()
+        linkStates = true
+    }
+    func _commitPreviousTransactions() {
+        guard linkStates else {return}
+        guard _currentTriggers.count > 0 else {return}
+        _setTargetState()
+        for trigger in _currentTriggers {
+            originState.append(transition: NTransition(targetState: targetState, trigger:trigger))
+        }
+        if originState !== targetState {
+            machine.append(state: originState)
+        }
+        if zeroOrMore {
+            _epsilonTransitionToNewState()
+        }
+        originState      = targetState
+        _currentTriggers = []
+    }
+    func _setTargetState() {
+        if !zeroOrMore {
+            targetState = State()
+        }
+    }
+    func _epsilonTransitionToNewState() {
+        targetState = State()
+        let epsilonTransition = EpsilonTransition(targetState: targetState)
+        originState.append(transition: epsilonTransition)
+        machine.append(state: originState)
+        zeroOrMore = false
+    }
+    func _stageTransition(char:Character) {
+        _currentTriggers.append(CharToken(char: char))
+    }
+    func _setAcceptingStates() {
+        targetState.accepting = true
+    }
+    func _isSpecialSymbol(char: Character) -> Bool {
+        for stackSymbol in machine.stackSymbols {
+            if char == stackSymbol.pushChar?.char ||
+                char == stackSymbol.popChar?.char
+            {
+                return true
+            }
+        }
+        switch char {
+        case "*":
+            return true
+        case "+":
+            return true
+        case "?":
+            return true
+        default:
+            return false
+        }
+    }
+    
+    
+    func _zeroOrMoreAction() {
+        zeroOrMore = true
+    }
+    func _oneOrMoreAction() {
+        
+    }
+    func _optionalAction() {
+        
+    }
+    func _initRepetitionAction() {
+        
+    }
+    func _finishRepetitionAction() {
+        
+    }
+    
+    func _initiate(machine:NPDAutomaton) {
         self.machine = machine
         let initial = State();
         machine.addStackSymbol(
@@ -40,115 +154,5 @@ class RegExBuilder {
         _actions["?"] = _optionalAction
         _actions["{"] = _initRepetitionAction
         _actions["}"] = _finishRepetitionAction
-    }
-    private var originState:State!
-    private var targetState:State!
-    private var linkStates = true
-    private var zeroOrMore = false
-    private var _currentTriggers:[Acceptable] = []
-    private var _actions:[Character:ActionFunction] = [:]
-}
-extension RegExBuilder: StateBuilder {
-    private func _initSquareOrAction() {
-        _commitPreviousTransactions()
-        machine.push(record:
-            StackRecord(
-                data: nil,
-                pushChar: CharToken(char:"["),
-                popChar: CharToken(char:"]")
-            )
-        )
-        linkStates = false
-    }
-    private func _finishSquareOrAction() {
-        let _      = machine.pop()
-        linkStates = true
-    }
-    private func _commitPreviousTransactions() {
-        guard linkStates else {return}
-        guard _currentTriggers.count > 0 else {return}
-        _setTargetState()
-        for trigger in _currentTriggers {
-            originState.append(transition: NTransition(targetState: targetState, trigger:trigger))
-        }
-        if originState !== targetState {
-             machine.append(state: originState)
-        }
-        originState      = targetState
-        _currentTriggers = []
-    }
-    private func _setTargetState() {
-        if zeroOrMore {
-            zeroOrMore = false
-        } else {
-            targetState = State()
-        }
-        
-    }
-    private func _stageTransition(char:Character) {
-        _currentTriggers.append(CharToken(char: char))
-    }
-    func compile(machine:Automaton) -> Bool {
-        guard let machine = machine as? NPDAutomaton else {return false}
-        _initiate(machine: machine)
-        for char in regExString.characters {
-            if _isSpecialSymbol(char: char) {
-                guard let actionFunction = _actions[char] else {return false}
-                actionFunction()
-            } else {
-                _commitPreviousTransactions()
-                _stageTransition(char: char)
-            }
-        }
-        _commitPreviousTransactions()
-        _setAcceptingStates()
-        machine.append(state: targetState)
-        machine.reset()
-        return true
-    }
-    
-    
-    
-    
-    
-    
-    private func _setAcceptingStates() {
-        targetState.accepting = true
-    }
-    private func _isSpecialSymbol(char: Character) -> Bool {
-        for stackSymbol in machine.stackSymbols {
-            if char == stackSymbol.pushChar?.char ||
-                char == stackSymbol.popChar?.char
-            {
-                return true
-            }
-        }
-        switch char {
-        case "*":
-            return true
-        case "+":
-            return true
-        case "?":
-            return true
-        default:
-            return false
-        }
-    }
-    
-    
-    private func _zeroOrMoreAction() {
-        zeroOrMore = true
-    }
-    private func _oneOrMoreAction() {
-        
-    }
-    private func _optionalAction() {
-        
-    }
-    private func _initRepetitionAction() {
-        
-    }
-    private func _finishRepetitionAction() {
-        
     }
 }

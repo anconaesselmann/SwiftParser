@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PDAutomaton/src/State/RegExBuilder.swift"
-            timestampString = "493277219.007836"
+            timestampString = "493333469.071307"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
+            startingLineNumber = "110"
+            endingLineNumber = "110"
             landmarkName = "_zeroOrMoreAction()"
             landmarkType = "7">
          </BreakpointContent>
@@ -32,6 +32,102 @@
             startingLineNumber = "80"
             endingLineNumber = "80"
             landmarkName = "test_oneOrMoreOrs()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PDAutomatonTests/RegExTests.swift"
+            timestampString = "493343351.59962"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "108"
+            endingLineNumber = "108"
+            landmarkName = "test_backtracking_greedyUntilEndOfMatch()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PDAutomaton/src/NFAutomaton.swift"
+            timestampString = "493343191.909703"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "_runMatchBeginning()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PDAutomatonTests/RegExTests.swift"
+            timestampString = "493343351.59962"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "109"
+            endingLineNumber = "109"
+            landmarkName = "test_backtracking_greedyUntilEndOfMatch()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PDAutomatonTests.RegExTests.test_backtracking_greedyUntilEndOfMatch () -&gt; ()"
+                  moduleName = "PDAutomatonTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Dropbox/Swift%20MacOS/PDAutomaton/PDAutomatonTests/RegExTests.swift"
+                  timestampString = "493338512.807741"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "129"
+                  endingLineNumber = "129"
+                  offsetFromSymbolStart = "1432">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "PDAutomatonTests.RegExTests.(test_backtracking_greedyUntilEndOfMatch () -&gt; ()).(implicit closure #2)"
+                  moduleName = "PDAutomatonTests"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Dropbox/Swift%20MacOS/PDAutomaton/PDAutomatonTests/RegExTests.swift"
+                  timestampString = "493338512.809597"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "129"
+                  endingLineNumber = "129"
+                  offsetFromSymbolStart = "8">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "PDAutomaton/src/NFAutomaton.swift"
+            timestampString = "493343191.909703"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "_runMatchBeginning()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

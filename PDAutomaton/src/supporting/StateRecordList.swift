@@ -35,3 +35,12 @@ extension StateRecordList: Sequence {
         return _elements.makeIterator()
     }
 }
+extension StateRecordList:CustomStringConvertible {
+    var description: String {
+        var result = ""
+        for (_, element) in _elements {
+            result += "\t\(element)\n"
+        }
+        return "RecordList:\n\(result)"
+    }
+}

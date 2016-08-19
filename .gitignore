@@ -42,4 +42,4 @@ ehthumbs.db
 Thumbs.db
 
 # Xcode files
-.xcuserstate
+*.xcuserstate

@@ -20,6 +20,7 @@ class NFAutomaton {
         tape = t
     }
     private var _tapePos:Int = 0
+    private var _hadPassingState = false
 }
 extension NFAutomaton:Automaton {
     func append(state: State) {
@@ -27,7 +28,9 @@ extension NFAutomaton:Automaton {
         reset()
     }
     func run() -> Bool {
-        return matchBeginning ? _runMatchBeginning() : _runMatchLeftMost()
+        let result = matchBeginning ? _runMatchBeginning() : _runMatchLeftMost()
+        _resetTape()
+        return result
     }
     func step() -> Bool {
         guard !tape.eof else {return false}
@@ -38,8 +41,6 @@ extension NFAutomaton:Automaton {
             tape.advance()
             return true
         } else {
-            accepting = false
-            _resetTape()
             return false
         }
     }
@@ -48,17 +49,25 @@ extension NFAutomaton:Automaton {
         matchPos  = nil
         accepting = false
         _tapePos  = tape?.position ?? 0
+        _hadPassingState = false
     }
 }
 
 private extension NFAutomaton {
     static var counter = 0
+    func _hasFinished() -> Bool {
+         // TODO: make this dependent on a flag that interupts execution when the first match is found before the tape is at the end
+        return accepting
+    }
     func _runMatchBeginning() -> Bool {
+        var tempTapePos = _tapePos
         while step() {
-            if accepting {
-                // TODO: make this dependent on a flag that interupts execution when the first match is found before the tape is at the end
-                break
-            }
+            // TODO: test here if non-greedy matching
+            if accepting { tempTapePos = _tapePos }
+        }
+        if _hadPassingState {
+            _tapePos = tempTapePos
+            accepting = true
         }
         matchPos = accepting ? _tapePos : nil
         return accepting
@@ -79,6 +88,7 @@ private extension NFAutomaton {
         var transitionMade = false
         let temp           = StateRecordList()
         for (_, record) in currentStates {
+            print(token, record)
             if _makeNonDeterministicTransitions(
                 forRecord: record,
                 withToken: token,
@@ -98,9 +108,7 @@ private extension NFAutomaton {
                 let targetState = transition.targetState!
                 if recordList.insert(state: targetState) {
                     transitionMade = true
-                    if targetState.accepting {
-                        accepting = true
-                    }
+                    _setAccepting(forState: targetState)
                 }
             }
         }
@@ -125,11 +133,19 @@ private extension NFAutomaton {
         }
         currentStates = temp
     }
+    func _setAccepting(forState state:State) {
+        if state.accepting {
+            accepting = true
+            print("Last accepting position: \(tape.position)")
+            _hadPassingState = true
+        }
+    }
     func _makeEpsilonTransitions(forRecord record:StateRecord, notIn recordList: StateRecordList) {
         let _ = recordList.insert(record: record)
         for transition in record.state.transitions {
             guard let targetState = (transition as? EpsilonTransition)?.targetState else {continue}
             if recordList.insert(state: targetState) {
+                _setAccepting(forState: targetState)
                 let newRecord = StateRecord(state: targetState)
                 _makeEpsilonTransitions(forRecord: newRecord, notIn: recordList)
             }

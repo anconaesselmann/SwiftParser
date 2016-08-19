@@ -124,12 +124,12 @@ class NFAutomatonTest: XCTestCase {
         stepSuccess = nfa.step()
         
         XCTAssertEqual(stepSuccess, false)
-        XCTAssertEqual(nfa.tape.position, 0)
-        XCTAssertEqual(nfa.currentStates.count, 1)
-        XCTAssert(nfa.currentStates["\(s1.id)_0"]?.state === s1)
+        XCTAssertEqual(nfa.tape.position, 2)
+        XCTAssertEqual(nfa.currentStates.count, 0)
         XCTAssertEqual(nfa.accepting, false)
         
         nfa.reset()
+        nfa.tape.position = 0
         
         let runSuccess = nfa.run()
         XCTAssert(runSuccess)

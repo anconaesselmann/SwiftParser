@@ -65,7 +65,7 @@
 		9722FC501D5C157B0025A91D /* PDAutomaton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDAutomaton.swift; sourceTree = "<group>"; };
 		9722FC521D5C157B0025A91D /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		9722FC531D5C157B0025A91D /* StackRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackRecord.swift; sourceTree = "<group>"; };
-		9722FC551D5C157B0025A91D /* RegExBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegExBuilder.swift; sourceTree = "<group>"; };
+		9722FC551D5C157B0025A91D /* RegExBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegExBuilder.swift; path = State/RegExBuilder.swift; sourceTree = "<group>"; };
 		9722FC561D5C157B0025A91D /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
 		9722FC571D5C157B0025A91D /* StateBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateBuilder.swift; sourceTree = "<group>"; };
 		9722FC581D5C157B0025A91D /* Transition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Transition.swift; sourceTree = "<group>"; };
@@ -178,7 +178,6 @@
 		9722FC541D5C157B0025A91D /* State */ = {
 			isa = PBXGroup;
 			children = (
-				9722FC551D5C157B0025A91D /* RegExBuilder.swift */,
 				9722FC561D5C157B0025A91D /* State.swift */,
 				9722FC571D5C157B0025A91D /* StateBuilder.swift */,
 				9722FC581D5C157B0025A91D /* Transition.swift */,
@@ -209,6 +208,7 @@
 				9733D74A1D64437A006E06DD /* NFAutomaton.swift */,
 				97DC15251D66AA3E001B32CB /* NPDAutomaton.swift */,
 				976A37221D628516004283F3 /* RegEx.swift */,
+				9722FC551D5C157B0025A91D /* RegExBuilder.swift */,
 				9733D74C1D65347A006E06DD /* NState.swift */,
 				9733D75A1D66619F006E06DD /* TransitionProtocol.swift */,
 				9733D74E1D665327006E06DD /* NTransition.swift */,

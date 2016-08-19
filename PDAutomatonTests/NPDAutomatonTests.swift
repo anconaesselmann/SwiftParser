@@ -42,6 +42,8 @@ class NPDAutomatonTests: XCTestCase {
         XCTAssertEqual(machine.step(), false)
         
         machine.reset()
+        machine.tape.position = 0
+        
         XCTAssert(machine.accepting == false)
         XCTAssert(machine.run() == true)
         XCTAssert(machine.accepting == true)

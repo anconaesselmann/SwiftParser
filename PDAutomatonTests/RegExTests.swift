@@ -75,7 +75,7 @@ class RegExTests: XCTestCase {
     }
     func test_oneOrMoreOrs() {
         re.pattern = "a[bc]*d"
-        XCTAssertEqual(re.machine.states.count, 3)
+        XCTAssertEqual(re.machine.states.count, 4) // one for Epsilon transitions (could be optimized to 3)
         var match:Int?
         match = re.match(subject: "dada")
         XCTAssertEqual(match, 1)
@@ -95,9 +95,22 @@ class RegExTests: XCTestCase {
         match = re.match(subject: "acc")
         XCTAssertEqual(match, nil)
     }
-    func test_backtracking() {
-        re.pattern = "ab*b"
+    func test_backtracking_greedyUntilNextChar() {
+        re.pattern = "ab*c"
+        let match = re.match(subject: "cabbbbbbcd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.position, 9)
+    }
+    func test_backtracking_greedyUntilEndOfMatch() {
+        re.pattern = "ab*"
         print(re.machine)
+        let input = "cccabbbbbbbbcd"
+        let match = re.match(subject: input)
+        XCTAssertEqual(match, 3)
+        XCTAssertEqual(re.position, 12)
+    }
+    func test_backtracking2() {
+        re.pattern = "ab*b"
         var match:Int?
         match = re.match(subject: "cabd")
         XCTAssertEqual(match, 1)
