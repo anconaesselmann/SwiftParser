@@ -49,11 +49,11 @@ class PDAutomatonTests: XCTestCase {
         let initial = State();
         let final = State(accepting: true);
         let transition = Transition(targetState: final, trigger:a)
-        initial.addTransition(transition: transition)
+        initial.append(transition: transition)
         
         let machine = FSMachine(name: "a recognizer", tape: tape)
-        machine.addState(state: initial)
-        machine.addState(state: final)
+        machine.append(state: initial)
+        machine.append(state: final)
         let accepting = machine.run()
         XCTAssert(accepting == true)
     }
@@ -72,18 +72,18 @@ class PDAutomatonTests: XCTestCase {
         let s2 = State(accepting: true);
         let s3 = State();
         let final = State(accepting: true);
-        initial.addTransition(transition: Transition(targetState: s1, trigger:a))
+        initial.append(transition: Transition(targetState: s1, trigger:a))
         
-        s1.addTransition(transition: Transition(targetState: s2, trigger:b))
-        s2.addTransition(transition: Transition(targetState: s3, trigger:c))
+        s1.append(transition: Transition(targetState: s2, trigger:b))
+        s2.append(transition: Transition(targetState: s3, trigger:c))
         
-        s3.addTransition(transition: Transition(targetState: final, trigger:d))
+        s3.append(transition: Transition(targetState: final, trigger:d))
         
-        machine.addState(state: initial)
-        machine.addState(state: s1)
-        machine.addState(state: s2)
-        machine.addState(state: s3)
-        machine.addState(state: final)
+        machine.append(state: initial)
+        machine.append(state: s1)
+        machine.append(state: s2)
+        machine.append(state: s3)
+        machine.append(state: final)
         
         XCTAssert(machine.step()!.accepting == false)
         XCTAssert(machine.step()!.accepting == true)
@@ -163,41 +163,41 @@ class PDAutomatonTests: XCTestCase {
         let d = CharToken(char: "d")
         let e = CharToken(char: "e")
         
-        initialB.addTransition(transition: Transition(targetState: s1B, trigger:c))
-        s1B.addTransition(transition: Transition(targetState: s2B, trigger:d))
-        s2B.addTransition(transition: Transition(targetState: finalB, trigger:e))
+        initialB.append(transition: Transition(targetState: s1B, trigger:c))
+        s1B.append(transition: Transition(targetState: s2B, trigger:d))
+        s2B.append(transition: Transition(targetState: finalB, trigger:e))
         
-        machineB.addState(state: initialB)
-        machineB.addState(state: s1B)
-        machineB.addState(state: s2B)
-        machineB.addState(state: finalB)
+        machineB.append(state: initialB)
+        machineB.append(state: s1B)
+        machineB.append(state: s2B)
+        machineB.append(state: finalB)
         
         
         let initialA = State();
-        let s1A = State();
-        let s2A = State();
-        let s3A = State();
-        let s4A = State();
-        let finalA = State(accepting: true);
+        let s1A = State()
+        let s2A = State()
+        let s3A = State()
+        let s4A = State()
+        let finalA = State(accepting: true)
         
         let a = CharToken(char: "a")
         let b = CharToken(char: "b")
         let f = CharToken(char: "f")
         let g = CharToken(char: "g")
         
-        initialA.addTransition(transition: Transition(targetState: s1A, trigger:a))
+        initialA.append(transition: Transition(targetState: s1A, trigger:a))
         
-        s1A.addTransition(transition: Transition(targetState: s2A, trigger:b))
-        s2A.addTransition(transition: Transition(targetState: s3A, trigger:machineB))
-        s3A.addTransition(transition: Transition(targetState: s4A, trigger:f))
-        s4A.addTransition(transition: Transition(targetState: finalA, trigger:g))
+        s1A.append(transition: Transition(targetState: s2A, trigger:b))
+        s2A.append(transition: Transition(targetState: s3A, trigger:machineB))
+        s3A.append(transition: Transition(targetState: s4A, trigger:f))
+        s4A.append(transition: Transition(targetState: finalA, trigger:g))
         
-        machineA.addState(state: initialA)
-        machineA.addState(state: s1A)
-        machineA.addState(state: s2A)
-        machineA.addState(state: s3A)
-        machineA.addState(state: s4A)
-        machineA.addState(state: finalA)
+        machineA.append(state: initialA)
+        machineA.append(state: s1A)
+        machineA.append(state: s2A)
+        machineA.append(state: s3A)
+        machineA.append(state: s4A)
+        machineA.append(state: finalA)
         
         print(machineA)
         XCTAssert(machineA.step()!.accepting == false)

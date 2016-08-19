@@ -15,7 +15,3 @@ class PDAutomaton: FSMachine {
         return stack.pop()
     }
 }
-// NondeterministicPushDownAutomaton
-class NPDAutomaton: PDAutomaton {
-    
-}

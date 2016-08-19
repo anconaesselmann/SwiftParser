@@ -1,20 +1,25 @@
 import Foundation
 
-class Transition:TransitionProtocol {
+
+class NTransition:TransitionProtocol {
+    var min = 1
+    var max = 1
+    
     var trigger:Acceptable!
     var targetState:State!
     
-    init(targetState: State, trigger: Acceptable) {
+    init(targetState: NState, trigger: Acceptable) {
         self.trigger     = trigger;
         self.targetState = targetState
     }
-}
+    
 
-extension Transition:CustomStringConvertible {
+}
+extension NTransition:CustomStringConvertible {
     var description: String {
-        if trigger == nil {
-            return "Trigger 'Epsylon' -> State '\(targetState.id!)'"
-        }
         return "Trigger '\(trigger!)' -> State '\(targetState.id!)'"
     }
 }
+
+
+

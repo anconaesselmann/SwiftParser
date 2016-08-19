@@ -2,7 +2,7 @@ import Foundation
 
 class State {
     var accepting:Bool
-    var transitions:[Transition] = []
+    var transitions:[TransitionProtocol] = []
     
     init(accepting:Bool) {
         self.accepting = accepting
@@ -12,7 +12,7 @@ class State {
         accepting = false
         _setId()
     }
-    func addTransition(transition: Transition) {
+    func append(transition: TransitionProtocol) {
         transitions.append(transition)
     }
     var id:Int!

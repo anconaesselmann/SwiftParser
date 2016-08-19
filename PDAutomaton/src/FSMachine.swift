@@ -1,6 +1,6 @@
 import Foundation
 
-class FSMachine {
+class FSMachine:Automaton {
     var name:String
     var states = [State]()
     var finalState:State?
@@ -26,7 +26,7 @@ class FSMachine {
         self.name = name
         self.tape = tape
     }
-    func addState(state: State) {
+    func append(state: State) {
         states.append(state)
     }
     
@@ -53,6 +53,7 @@ class FSMachine {
         return matchBeginning ? _runMatchBeginning() : _runMatchLeftMost()
     }
     func step() -> State? {
+        guard tape != nil else {return nil}
         guard !tape.eof else {return nil}
         if currentState == nil {
             currentState = states[0]
@@ -61,6 +62,7 @@ class FSMachine {
         let token = tape.get()!
         guard currentState != nil else {return nil}
         for transiton in currentState!.transitions {
+            let transiton = transiton as! Transition
             if _acceptTransition(transiton: transiton, token: token) {
                 tape.advance()
                 return currentState

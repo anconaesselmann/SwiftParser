@@ -69,10 +69,10 @@ extension RegExBuilder: StateBuilder {
         guard _currentTriggers.count > 0 else {return}
         _setTargetState()
         for trigger in _currentTriggers {
-            originState.addTransition(transition: Transition(targetState: targetState, trigger:trigger))
+            originState.append(transition: Transition(targetState: targetState, trigger:trigger))
         }
         if originState !== targetState {
-             machine.addState(state: originState)
+             machine.append(state: originState)
         }
         originState      = targetState
         _currentTriggers = []
