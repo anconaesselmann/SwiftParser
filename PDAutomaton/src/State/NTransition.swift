@@ -8,7 +8,7 @@ class NTransition:TransitionProtocol {
     var trigger:Acceptable!
     var targetState:State!
     
-    init(targetState: NState, trigger: Acceptable) {
+    init(targetState: State, trigger: Acceptable) {
         self.trigger     = trigger;
         self.targetState = targetState
     }

@@ -2,7 +2,7 @@ import Foundation
 
 class EpsilonTransition:TransitionProtocol {
     var targetState:State!
-    init(targetState state:NState) {
+    init(targetState state:State) {
         targetState = state
     }
 }

@@ -10,8 +10,8 @@ class NFAutomatonTest: XCTestCase {
     }
     
     func test_followOneEpsilonFromInitialState() {
-        let s1 = NState()
-        let s2 = NState()
+        let s1 = State()
+        let s2 = State()
         let epsilon = EpsilonTransition(targetState: s2)
         s1.append(transition: epsilon)
         nfa.append(state: s1)
@@ -22,9 +22,9 @@ class NFAutomatonTest: XCTestCase {
         XCTAssert(nfa.currentStates["\(s2.id)_0"]?.state === s2)
     }
     func test_followCircularEpsilonTransitionsFromInitialState() {
-        let s1 = NState()
-        let s2 = NState()
-        let s3 = NState()
+        let s1 = State()
+        let s2 = State()
+        let s3 = State()
         let e1_2 = EpsilonTransition(targetState: s2)
         let e2_3 = EpsilonTransition(targetState: s3)
         let e3_2 = EpsilonTransition(targetState: s2)
@@ -42,11 +42,11 @@ class NFAutomatonTest: XCTestCase {
     }
     
     func test_followCircularEpsilonTransitionsFromInitialState_withBranching() {
-        let s1 = NState()
-        let s2 = NState()
-        let s3 = NState()
-        let s4 = NState()
-        let s5 = NState()
+        let s1 = State()
+        let s2 = State()
+        let s3 = State()
+        let s4 = State()
+        let s5 = State()
         let e1_2 = EpsilonTransition(targetState: s2)
         let e2_3 = EpsilonTransition(targetState: s3)
         let e3_2 = EpsilonTransition(targetState: s2)
@@ -75,10 +75,10 @@ class NFAutomatonTest: XCTestCase {
         let tape = StringTape(string: "aba")
         nfa.tape = tape
         
-        let s1 = NState()
-        let s2 = NState()
-        let s3 = NState()
-        let s4 = NState(accepting: true)
+        let s1 = State()
+        let s2 = State()
+        let s3 = State()
+        let s4 = State(accepting: true)
         
         let a = CharToken(char: "a")
         let b = CharToken(char: "b")
@@ -140,7 +140,7 @@ class NFAutomatonTest: XCTestCase {
     func testRegExStateBuilder() {
         let reg     = RegExBuilder(regExString: "abcd")
         let tape    = StringTape(string: "abcd")
-        let machine = NPDAutomaton(tape: tape)
+        let machine = NPDAutomaton(withTape: tape)
         let compiled = reg.compile(machine: machine)
         machine.reset()
         XCTAssertEqual(compiled, true)

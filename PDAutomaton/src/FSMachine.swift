@@ -1,11 +1,11 @@
 import Foundation
 
 class FSMachine:Automaton {
-    var name:String
     var states = [State]()
     var finalState:State?
     var currentState:State?
     var matchBeginning = true
+    var id:Int!
     var tape:Tape! {
         didSet {
             reset()
@@ -16,23 +16,26 @@ class FSMachine:Automaton {
     var matchPos:Int?
     
     init() {
-        self.name = ""
-        self.tape = nil
+        _setId()
+        tape = nil
     }
-    init(name:String) {
-        self.name = name
-    }
-    init(name: String, tape: StringTape) {
-        self.name = name
-        self.tape = tape
+    required init(withTape t: Tape) {
+        _setId()
+        tape = t
     }
     func append(state: State) {
         states.append(state)
     }
     
+    static var counter = 0
+    func _setId() {
+        FSMachine.counter += 1
+        id = FSMachine.counter
+    }
+    
     private func _runMatchBeginning() -> Bool {
         if finalState == nil {
-            while let _ = step() {}
+            while step() {}
             finalState = currentState
             matchPos   = accepting ? _tapePos : nil
         }
@@ -52,26 +55,26 @@ class FSMachine:Automaton {
     func run() -> Bool {
         return matchBeginning ? _runMatchBeginning() : _runMatchLeftMost()
     }
-    func step() -> State? {
-        guard tape != nil else {return nil}
-        guard !tape.eof else {return nil}
+    func step() -> Bool {
+        guard tape != nil else {return false}
+        guard !tape.eof else {return false}
         if currentState == nil {
             currentState = states[0]
             _tapePos     = tape.position
         }
         let token = tape.get()!
-        guard currentState != nil else {return nil}
+        guard currentState != nil else {return false}
         for transiton in currentState!.transitions {
             let transiton = transiton as! Transition
             if _acceptTransition(transiton: transiton, token: token) {
                 tape.advance()
-                return currentState
+                return true
             }
         }
         accepting    = currentState?.accepting ?? false
         currentState = nil
         _resetTape()
-        return nil
+        return false
     }
     private func _acceptTransition(transiton:Transition, token: AnyObject) -> Bool {
         if transiton.trigger.accepts(input: token) {

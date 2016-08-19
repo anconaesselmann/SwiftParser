@@ -10,7 +10,7 @@ class RegExBuilder {
     }
     private func _initiate(machine:NPDAutomaton) {
         self.machine = machine
-        let initial = NState();
+        let initial = State();
         machine.addStackSymbol(
             record: StackRecord(
                 data: nil,
@@ -41,8 +41,8 @@ class RegExBuilder {
         _actions["{"] = _initRepetitionAction
         _actions["}"] = _finishRepetitionAction
     }
-    private var originState:NState!
-    private var targetState:NState!
+    private var originState:State!
+    private var targetState:State!
     private var linkStates = true
     private var zeroOrMore = false
     private var _currentTriggers:[Acceptable] = []
@@ -81,7 +81,7 @@ extension RegExBuilder: StateBuilder {
         if zeroOrMore {
             zeroOrMore = false
         } else {
-            targetState = NState()
+            targetState = State()
         }
         
     }

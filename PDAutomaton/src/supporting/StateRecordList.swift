@@ -6,7 +6,7 @@ class StateRecordList {
             return _elements.count
         }
     }
-    func insert(state:NState) -> Bool {
+    func insert(state:State) -> Bool {
         let hash   = "\(state.id)_0"
         let record = StateRecord(state: state)
         return _insert(hash: hash, record: record)

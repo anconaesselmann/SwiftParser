@@ -1,10 +1,10 @@
 import Foundation
 
 class StateRecord {
-    init(state:NState) {
+    init(state:State) {
         self.state = state
         counter = Counter()
     }
-    var state:NState
+    var state:State
     var counter:Counter
 }

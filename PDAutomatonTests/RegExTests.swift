@@ -95,12 +95,16 @@ class RegExTests: XCTestCase {
         match = re.match(subject: "acc")
         XCTAssertEqual(match, nil)
     }
-//    func test_backtracking() {
-//        re.pattern = "ab*b"
-//        print(re.machine)
-//        var match:Int?
-//        match = re.match(subject: "cabd")
-//        XCTAssertEqual(match, 1)
-//        XCTAssertEqual(re.position, 4)
-//    }
+    func test_backtracking() {
+        re.pattern = "ab*b"
+        print(re.machine)
+        var match:Int?
+        match = re.match(subject: "cabd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.position, 3)
+        
+        match = re.match(subject: "cabbbbbd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.position, 7)
+    }
 }

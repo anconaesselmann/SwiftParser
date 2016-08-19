@@ -16,14 +16,15 @@ class State {
         transitions.append(transition)
     }
     var id:Int!
-}
-
-extension State:CustomStringConvertible {
+    
     private static var counter = 0
     private func _setId() {
         State.counter += 1
         id = State.counter
     }
+}
+
+extension State:CustomStringConvertible {
     var description: String {
         let acceptingString = accepting ? "Accepting" : ""
         var transitionString = ""
