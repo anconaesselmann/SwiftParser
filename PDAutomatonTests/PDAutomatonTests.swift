@@ -46,8 +46,8 @@ class PDAutomatonTests: XCTestCase {
         
         let a = CharToken(char: "a")
         
-        let initial = State();
-        let final = State(accepting: true);
+        let initial = NState();
+        let final = NState(accepting: true);
         let transition = Transition(targetState: final, trigger:a)
         initial.append(transition: transition)
         
@@ -67,11 +67,11 @@ class PDAutomatonTests: XCTestCase {
         let c = CharToken(char: "c")
         let d = CharToken(char: "d")
         
-        let initial = State();
-        let s1 = State();
-        let s2 = State(accepting: true);
-        let s3 = State();
-        let final = State(accepting: true);
+        let initial = NState();
+        let s1 = NState();
+        let s2 = NState(accepting: true);
+        let s3 = NState();
+        let final = NState(accepting: true);
         initial.append(transition: Transition(targetState: s1, trigger:a))
         
         s1.append(transition: Transition(targetState: s2, trigger:b))
@@ -96,7 +96,7 @@ class PDAutomatonTests: XCTestCase {
     func testRegExStateBuilder() {
         let reg     = RegExBuilder(regExString: "abcd")
         let tape    = StringTape(string: "abcdefg")
-        let machine = PDAutomaton(name: "abcd", tape: tape)
+        let machine = NPDAutomaton(name: "abcd", tape: tape)
         let compiled = reg.compile(machine: machine)
         XCTAssertEqual(compiled, true)
         let accepting = machine.run()
@@ -107,7 +107,7 @@ class PDAutomatonTests: XCTestCase {
     func testRegExStateBuilderRunTwice() {
         let reg     = RegExBuilder(regExString: "abcd")
         let tape    = StringTape(string: "abcdabcd")
-        let machine = PDAutomaton(name: "abcd", tape: tape)
+        let machine = NPDAutomaton(name: "abcd", tape: tape)
         let compiled = reg.compile(machine: machine)
         XCTAssert(compiled)
         var accepting = machine.run()
@@ -124,7 +124,7 @@ class PDAutomatonTests: XCTestCase {
     func testRegExStateBuilder_resetWhenNotMatching() {
         let reg     = RegExBuilder(regExString: "abcd")
         let tape    = StringTape(string: "abcefg")
-        let machine = PDAutomaton(name: "abcd", tape: tape)
+        let machine = NPDAutomaton(name: "abcd", tape: tape)
         let compiled = reg.compile(machine: machine)
         XCTAssert(compiled)
         let accepting = machine.run()
@@ -137,35 +137,34 @@ class PDAutomatonTests: XCTestCase {
         let reg     = RegExBuilder(regExString: "abcd")
         let tape    = StringTape(string: "ababce")
         tape.position = 2
-        let machine = PDAutomaton(name: "abcd", tape: tape)
+        let machine = NPDAutomaton(name: "abcd", tape: tape)
         let compiled = reg.compile(machine: machine)
         XCTAssert(compiled)
         let accepting = machine.run()
         XCTAssertEqual(accepting, false)
         XCTAssertEqual(tape.position, 2)
         XCTAssertEqual(machine.matchPos, nil)
-//        print(machine)
     }
     
     
     func testNestedMachines() {
         let tape    = StringTape(string: "abcdefg")
-        let machineB = PDAutomaton(name: "child", tape: tape)
+        let machineB = NPDAutomaton(name: "child", tape: tape)
         
-        let initialB = State();
-        let s1B = State();
-        let s2B = State();
-        let finalB = State(accepting: true);
+        let initialB = NState();
+        let s1B = NState();
+        let s2B = NState();
+        let finalB = NState(accepting: true);
         
-        let machineA = PDAutomaton(name: "parent", tape: tape)
+        let machineA = NPDAutomaton(name: "parent", tape: tape)
         
         let c = CharToken(char: "c")
         let d = CharToken(char: "d")
         let e = CharToken(char: "e")
         
-        initialB.append(transition: Transition(targetState: s1B, trigger:c))
-        s1B.append(transition: Transition(targetState: s2B, trigger:d))
-        s2B.append(transition: Transition(targetState: finalB, trigger:e))
+        initialB.append(transition: NTransition(targetState: s1B, trigger:c))
+        s1B.append(transition: NTransition(targetState: s2B, trigger:d))
+        s2B.append(transition: NTransition(targetState: finalB, trigger:e))
         
         machineB.append(state: initialB)
         machineB.append(state: s1B)
@@ -173,24 +172,24 @@ class PDAutomatonTests: XCTestCase {
         machineB.append(state: finalB)
         
         
-        let initialA = State();
-        let s1A = State()
-        let s2A = State()
-        let s3A = State()
-        let s4A = State()
-        let finalA = State(accepting: true)
+        let initialA = NState();
+        let s1A = NState()
+        let s2A = NState()
+        let s3A = NState()
+        let s4A = NState()
+        let finalA = NState(accepting: true)
         
         let a = CharToken(char: "a")
         let b = CharToken(char: "b")
         let f = CharToken(char: "f")
         let g = CharToken(char: "g")
         
-        initialA.append(transition: Transition(targetState: s1A, trigger:a))
+        initialA.append(transition: NTransition(targetState: s1A, trigger:a))
         
-        s1A.append(transition: Transition(targetState: s2A, trigger:b))
-        s2A.append(transition: Transition(targetState: s3A, trigger:machineB))
-        s3A.append(transition: Transition(targetState: s4A, trigger:f))
-        s4A.append(transition: Transition(targetState: finalA, trigger:g))
+        s1A.append(transition: NTransition(targetState: s2A, trigger:b))
+        s2A.append(transition: NTransition(targetState: s3A, trigger:machineB))
+        s3A.append(transition: NTransition(targetState: s4A, trigger:f))
+        s4A.append(transition: NTransition(targetState: finalA, trigger:g))
         
         machineA.append(state: initialA)
         machineA.append(state: s1A)
@@ -199,14 +198,25 @@ class PDAutomatonTests: XCTestCase {
         machineA.append(state: s4A)
         machineA.append(state: finalA)
         
-        print(machineA)
-        XCTAssert(machineA.step()!.accepting == false)
-        XCTAssert(machineA.step()!.accepting == false)
-        XCTAssert(machineA.step()!.accepting == false)
-        XCTAssert(machineA.step()!.accepting == false)
-        XCTAssert(machineA.step()!.accepting == true)
-        
+        XCTAssert(machineA.step())
+        XCTAssert(machineA.accepting == false)
+        XCTAssert(machineA.step())
+        XCTAssert(machineA.accepting == false)
+        XCTAssert(machineA.step())
+        XCTAssert(machineA.accepting == false)
+        XCTAssert(machineA.step())
+        XCTAssert(machineA.accepting == false)
+        XCTAssert(machineA.step())
         XCTAssert(machineA.accepting == true)
+        XCTAssertEqual(machineA.step(), false)
+        XCTAssert(machineA.accepting == true)
+        
+        machineA.tape.position = 0
+        
+        XCTAssertEqual(machineA.accepting, false)
+        XCTAssert(machineA.run())
+        XCTAssertEqual(machineA.accepting, true)
+        XCTAssertEqual(machineA.tape.position, 7)
         
         tape.string = "bcdefga"
         machineA.tape = tape
@@ -238,10 +248,9 @@ class PDAutomatonTests: XCTestCase {
     func testRegExStateBuilder_testOrWithExplicitCharacters() {
         let reg     = RegExBuilder(regExString: "a[bc]d")
         let tape    = StringTape(string: "abdefg")
-        let machine = PDAutomaton(name: "abd", tape: tape)
+        let machine = NPDAutomaton(name: "abd", tape: tape)
         let compiled = reg.compile(machine: machine)
         XCTAssert(compiled)
-        print(machine)
         let accepting = machine.run()
         XCTAssertEqual(accepting, true)
         XCTAssertEqual(tape.position, 3)
@@ -251,10 +260,9 @@ class PDAutomatonTests: XCTestCase {
     func testRegExStateBuilder_testOrWithExplicitCharacters_failing() {
         let reg     = RegExBuilder(regExString: "a[bc]d")
         let tape    = StringTape(string: "addefg")
-        let machine = PDAutomaton(name: "add", tape: tape)
+        let machine = NPDAutomaton(name: "add", tape: tape)
         let compiled = reg.compile(machine: machine)
         XCTAssert(compiled)
-        print(machine)
         let accepting = machine.run()
         XCTAssertEqual(accepting, false)
         XCTAssertEqual(tape.position, 0)

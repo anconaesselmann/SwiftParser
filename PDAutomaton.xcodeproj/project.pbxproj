@@ -36,6 +36,7 @@
 		976A37251D628AD2004283F3 /* RegExTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976A37241D628AD2004283F3 /* RegExTests.swift */; };
 		97DC15211D66820E001B32CB /* StateRecordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DC15201D66820E001B32CB /* StateRecordList.swift */; };
 		97DC15241D668319001B32CB /* StateRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DC15231D668319001B32CB /* StateRecord.swift */; };
+		97DC15261D66AA3E001B32CB /* NPDAutomaton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DC15251D66AA3E001B32CB /* NPDAutomaton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,7 @@
 		976A37241D628AD2004283F3 /* RegExTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegExTests.swift; path = PDAutomatonTests/RegExTests.swift; sourceTree = SOURCE_ROOT; };
 		97DC15201D66820E001B32CB /* StateRecordList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateRecordList.swift; path = supporting/StateRecordList.swift; sourceTree = "<group>"; };
 		97DC15231D668319001B32CB /* StateRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StateRecord.swift; path = supporting/StateRecord.swift; sourceTree = "<group>"; };
+		97DC15251D66AA3E001B32CB /* NPDAutomaton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NPDAutomaton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				9733D74A1D64437A006E06DD /* NFAutomaton.swift */,
+				97DC15251D66AA3E001B32CB /* NPDAutomaton.swift */,
 				9733D74C1D65347A006E06DD /* NState.swift */,
 				9733D75A1D66619F006E06DD /* TransitionProtocol.swift */,
 				9733D74E1D665327006E06DD /* NTransition.swift */,
@@ -355,6 +358,7 @@
 				97DC15241D668319001B32CB /* StateRecord.swift in Sources */,
 				9722FC2C1D5C153D0025A91D /* AppDelegate.swift in Sources */,
 				9733D7591D66617E006E06DD /* EpsilonTransition.swift in Sources */,
+				97DC15261D66AA3E001B32CB /* NPDAutomaton.swift in Sources */,
 				9722FC6E1D5C157B0025A91D /* CharToken.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

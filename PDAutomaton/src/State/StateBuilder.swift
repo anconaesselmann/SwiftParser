@@ -1,5 +1,5 @@
 import Foundation
 
 protocol StateBuilder {
-    func compile(machine:FSMachine) -> Bool
+    func compile(machine:Automaton) -> Bool
 }

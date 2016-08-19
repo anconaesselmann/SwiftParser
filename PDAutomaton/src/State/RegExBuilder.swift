@@ -3,14 +3,14 @@ import Foundation
 class RegExBuilder {
     typealias ActionFunction = () -> Void
     
-    var machine:PDAutomaton!
+    var machine:NPDAutomaton!
     var regExString:String = ""
     init(regExString:String) {
         self.regExString = regExString
     }
-    private func _initiate(machine:PDAutomaton) {
+    private func _initiate(machine:NPDAutomaton) {
         self.machine = machine
-        let initial = State();
+        let initial = NState();
         machine.addStackSymbol(
             record: StackRecord(
                 data: nil,
@@ -41,8 +41,8 @@ class RegExBuilder {
         _actions["{"] = _initRepetitionAction
         _actions["}"] = _finishRepetitionAction
     }
-    private var originState:State!
-    private var targetState:State!
+    private var originState:NState!
+    private var targetState:NState!
     private var linkStates = true
     private var zeroOrMore = false
     private var _currentTriggers:[Acceptable] = []
@@ -69,7 +69,7 @@ extension RegExBuilder: StateBuilder {
         guard _currentTriggers.count > 0 else {return}
         _setTargetState()
         for trigger in _currentTriggers {
-            originState.append(transition: Transition(targetState: targetState, trigger:trigger))
+            originState.append(transition: NTransition(targetState: targetState, trigger:trigger))
         }
         if originState !== targetState {
              machine.append(state: originState)
@@ -81,15 +81,15 @@ extension RegExBuilder: StateBuilder {
         if zeroOrMore {
             zeroOrMore = false
         } else {
-            targetState = State()
+            targetState = NState()
         }
         
     }
     private func _stageTransition(char:Character) {
         _currentTriggers.append(CharToken(char: char))
     }
-    func compile(machine:FSMachine) -> Bool {
-        guard let machine = machine as? PDAutomaton else {return false}
+    func compile(machine:Automaton) -> Bool {
+        guard let machine = machine as? NPDAutomaton else {return false}
         _initiate(machine: machine)
         for char in regExString.characters {
             if _isSpecialSymbol(char: char) {
@@ -102,6 +102,8 @@ extension RegExBuilder: StateBuilder {
         }
         _commitPreviousTransactions()
         _setAcceptingStates()
+        machine.append(state: targetState)
+        machine.reset()
         return true
     }
     
@@ -111,7 +113,7 @@ extension RegExBuilder: StateBuilder {
     
     
     private func _setAcceptingStates() {
-        originState.accepting = true
+        targetState.accepting = true
     }
     private func _isSpecialSymbol(char: Character) -> Bool {
         for stackSymbol in machine.stackSymbols {

@@ -2,7 +2,7 @@ import Foundation
 
 class RegEx {
     var tape:StringTape!
-    var machine:PDAutomaton!
+    var machine:NPDAutomaton!
     var regExBuilder:RegExBuilder!
     var position:Int {
         get {
@@ -15,7 +15,6 @@ class RegEx {
     private var _pattern = ""
     var pattern:String {
         set {
-            print(pattern)
             _pattern = newValue
             let _ = _compile(pattern: pattern) // TODO: Deal with this
         }
@@ -29,7 +28,7 @@ class RegEx {
     }
     private func _compile(pattern:String) -> Bool {
         tape         = StringTape()
-        machine      = PDAutomaton()
+        machine      = NPDAutomaton()
         regExBuilder = RegExBuilder(regExString: pattern)
         machine.tape = tape
         return regExBuilder.compile(machine: machine)

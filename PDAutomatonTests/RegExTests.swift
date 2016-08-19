@@ -16,7 +16,7 @@ class RegExTests: XCTestCase {
     func test_orWithMultipleChars() {
         let expected:Int? = 0
         let match         = re.match(pattern: "am[bcxyz]d", subject: "amydefg")
-        XCTAssertEqual(re.machine.states.count, 4)
+        XCTAssertEqual(re.machine.states.count, 5)
         XCTAssertEqual(match, expected)
     }
     func test_simpleOr_noMatch() {
@@ -75,8 +75,7 @@ class RegExTests: XCTestCase {
     }
     func test_oneOrMoreOrs() {
         re.pattern = "a[bc]*d"
-        XCTAssertEqual(re.machine.states.count, 2)
-        print(re.machine!)
+        XCTAssertEqual(re.machine.states.count, 3)
         var match:Int?
         match = re.match(subject: "dada")
         XCTAssertEqual(match, 1)

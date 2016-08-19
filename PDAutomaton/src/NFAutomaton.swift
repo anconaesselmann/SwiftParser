@@ -1,6 +1,6 @@
 import Foundation
 
-// NondeterministicPushDownAutomaton
+// Nondeterministic Finite State Automaton
 class NFAutomaton:Automaton {
     var states = [NState]()
     var currentStates  = StateRecordList()
@@ -8,10 +8,28 @@ class NFAutomaton:Automaton {
     var accepting      = false
     var tape:Tape! {didSet {reset()}}
     var matchPos:Int?
+    var name = ""
+    
+    init() {
+        self.name = ""
+        self.tape = nil
+    }
+    init(name:String) {
+        self.name = name
+    }
+    init(name: String, tape: StringTape) {
+        self.name = name
+        self.tape = tape
+    }
+    init(tape: StringTape) {
+        self.name = ""
+        self.tape = tape
+    }
     
     func append(state: State) {
         let state = state as! NState
         states.append(state)
+        reset()
     }
     
     private func _runMatchBeginning() -> Bool {
@@ -85,6 +103,9 @@ class NFAutomaton:Automaton {
         return transitionMade
     }
     private func _acceptTransition(transiton:NTransition, token: AnyObject) -> Bool {
+        if let automaton = transiton.trigger as? Automaton {
+            automaton.reset()
+        }
         return transiton.trigger.accepts(input: token)
     }
     
@@ -129,6 +150,9 @@ class NFAutomaton:Automaton {
 }
 extension NFAutomaton:Acceptable {
     func accepts(input:AnyObject) -> Bool {
+        if input is Automaton {
+            print("Is atomaton")
+        }
         let accepting = run()
         if accepting {
             if !tape.eof {

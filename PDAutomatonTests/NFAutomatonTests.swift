@@ -136,4 +136,17 @@ class NFAutomatonTest: XCTestCase {
         XCTAssertEqual(nfa.matchPos, 0)
         XCTAssertEqual(nfa.tape.position, 2)
     }
+    
+    func testRegExStateBuilder() {
+        let reg     = RegExBuilder(regExString: "abcd")
+        let tape    = StringTape(string: "abcd")
+        let machine = NPDAutomaton(tape: tape)
+        let compiled = reg.compile(machine: machine)
+        machine.reset()
+        XCTAssertEqual(compiled, true)
+        let accepting = machine.run()
+        XCTAssertEqual(accepting, true)
+        XCTAssertEqual(tape.position, 4)
+        XCTAssertEqual(machine.matchPos, 0)
+    }
 }
