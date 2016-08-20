@@ -7,8 +7,12 @@ class StateRecordList {
         }
     }
     func insert(state:State) -> Bool {
-        let hash   = "\(state.id)_0"
+        return insert(state: state, withCount: 0)
+    }
+    func insert(state:State, withCount count:Int) -> Bool {
+        let hash   = "\(state.id)_\(count)"
         let record = StateRecord(state: state)
+        record.counter.count = count
         return _insert(hash: hash, record: record)
     }
     func insert(record:StateRecord) -> Bool {

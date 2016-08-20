@@ -117,7 +117,7 @@ class NFAutomatonTest: XCTestCase {
         XCTAssert(stepSuccess)
         XCTAssertEqual(nfa.tape.position, 2)
         XCTAssertEqual(nfa.currentStates.count, 3)
-        XCTAssert(nfa.currentStates["\(s2.id)_0"]?.state === s2)
+        XCTAssert(nfa.currentStates["\(s2.id)_1"]?.state === s2)
         XCTAssert(nfa.currentStates["\(s3.id)_0"]?.state === s3)
         XCTAssert(nfa.currentStates["\(s4.id)_0"]?.state === s4)
         

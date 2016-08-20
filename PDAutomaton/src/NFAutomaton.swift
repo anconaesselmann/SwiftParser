@@ -102,9 +102,11 @@ private extension NFAutomaton {
             guard let transition = transition as? NTransition else {continue}
             if _acceptTransition(transiton: transition, token: token) {
                 let targetState = transition.targetState!
-                if recordList.insert(state: targetState) {
+                let count = (record.state === targetState) ? record.counter.count + 1 : 0
+                if recordList.insert(state: targetState, withCount: count) {
                     transitionMade = true
                     _setAccepting(forState: targetState)
+                    print(recordList)
                 }
             }
         }
