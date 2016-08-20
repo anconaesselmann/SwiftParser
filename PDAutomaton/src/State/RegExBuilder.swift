@@ -154,6 +154,13 @@ private extension RegExBuilder {
                 popChar:  CharToken(char: ")")
             )
         )
+        machine.addStackSymbol(
+            record: StackRecord(
+                data: nil,
+                pushChar: CharToken(char: "{"),
+                popChar:  CharToken(char: "}")
+            )
+        )
         originState = initial
         targetState = initial
         if regExString[regExString.startIndex] == "^" {
