@@ -10,12 +10,11 @@ class RegExBuilder {
     }
     private var originState:State!
     private var targetState:State!
-    private var linkStates = true
     private var minTransitionCount = 1
     private var maxTransitionCount = 1
     private var _currentTriggers:[Acceptable] = []
     private var _actions:[Character:ActionFunction] = [:]
-    private var _createEpsilon = false
+    private var _state:RegExState = .Default
 }
 extension RegExBuilder: StateBuilder {
     func compile(machine:Automaton) -> Bool {
@@ -38,6 +37,15 @@ extension RegExBuilder: StateBuilder {
     }
 }
 private extension RegExBuilder {
+    enum RegExState {
+        case Default
+        case CreateEpsilon
+        case ReadOrBracket
+        case ReadFirstRepetitionValue
+        case ReadSecondRepetitionValue
+    }
+}
+private extension RegExBuilder {
     func _initSquareOrAction() {
         _commitPreviousTransactions()
         machine.push(record:
@@ -47,14 +55,14 @@ private extension RegExBuilder {
                 popChar: CharToken(char:"]")
             )
         )
-        linkStates = false
+        _state = .ReadOrBracket
     }
     func _finishSquareOrAction() {
-        let _      = machine.pop()
-        linkStates = true
+        let _  = machine.pop()
+        _state = .Default
     }
     func _commitPreviousTransactions() {
-        guard linkStates else {return}
+        guard _state != .ReadOrBracket else {return}
         guard _currentTriggers.count > 0 else {return}
         _setTargetState()
         for trigger in _currentTriggers {
@@ -63,14 +71,14 @@ private extension RegExBuilder {
         if originState !== targetState {
             machine.append(state: originState)
         }
-        if _createEpsilon {
+        if _state == .CreateEpsilon {
             _epsilonTransitionToNewState()
         }
         originState      = targetState
         _currentTriggers = []
     }
     func _setTargetState() {
-        if !_createEpsilon {
+        if _state == .Default {
             targetState = State()
         }
     }
@@ -102,6 +110,8 @@ private extension RegExBuilder {
             return true
         case "?":
             return true
+        case ",":
+            return true
         default:
             return false
         }
@@ -112,29 +122,32 @@ private extension RegExBuilder {
     func _resetTransitionCounts() {
         maxTransitionCount = 1
         minTransitionCount = 1
-        _createEpsilon = false
+        _state = .Default
     }
     
     func _zeroOrMoreAction() {
         maxTransitionCount = Int.max
         minTransitionCount = 0
-        _createEpsilon = true
+        _state = .CreateEpsilon
     }
     func _oneOrMoreAction() {
         maxTransitionCount = Int.max
         minTransitionCount = 1
-        _createEpsilon = true
+        _state = .CreateEpsilon
     }
     func _optionalAction() {
         maxTransitionCount = 1
         minTransitionCount = 0
-        _createEpsilon = true
+        _state = .CreateEpsilon
     }
     func _initRepetitionAction() {
-        
+        _state = .ReadFirstRepetitionValue
     }
     func _finishRepetitionAction() {
         
+    }
+    func _commaAction() {
+        _state = .ReadSecondRepetitionValue
     }
     
     func _initiate(machine:NPDAutomaton) {
@@ -176,6 +189,7 @@ private extension RegExBuilder {
         _actions["?"] = _optionalAction
         _actions["{"] = _initRepetitionAction
         _actions["}"] = _finishRepetitionAction
+        _actions[","] = _commaAction
         
         _resetTransitionCounts()
     }
