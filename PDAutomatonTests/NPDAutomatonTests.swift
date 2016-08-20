@@ -48,61 +48,6 @@ class NPDAutomatonTests: XCTestCase {
         XCTAssert(machine.run() == true)
         XCTAssert(machine.accepting == true)
     }
-    
-    func testRegExStateBuilder() {
-        let reg     = RegExBuilder(regExString: "abcd")
-        let tape    = StringTape(string: "abcdefg")
-        let machine = NPDAutomaton(withTape: tape)
-        let compiled = reg.compile(machine: machine)
-        XCTAssertEqual(compiled, true)
-        let accepting = machine.run()
-        XCTAssertEqual(accepting, true)
-        XCTAssertEqual(tape.position, 4)
-        XCTAssertEqual(machine.matchPos, 0)
-    }
-    func testRegExStateBuilderRunTwice() {
-        let reg     = RegExBuilder(regExString: "abcd")
-        let tape    = StringTape(string: "abcdabcd")
-        let machine = NPDAutomaton(withTape: tape)
-        let compiled = reg.compile(machine: machine)
-        XCTAssert(compiled)
-        var accepting = machine.run()
-        XCTAssert(machine.accepting == true)
-        XCTAssert(tape.position == 4)
-        XCTAssertEqual(machine.matchPos, 0)
-        tape.position = 4
-        accepting = machine.run()
-        XCTAssertEqual(accepting, true)
-        XCTAssertEqual(tape.position, 8)
-        XCTAssertEqual(machine.matchPos, 4)
-    }
-    
-    func testRegExStateBuilder_resetWhenNotMatching() {
-        let reg     = RegExBuilder(regExString: "abcd")
-        let tape    = StringTape(string: "abcefg")
-        let machine = NPDAutomaton(withTape: tape)
-        let compiled = reg.compile(machine: machine)
-        XCTAssert(compiled)
-        let accepting = machine.run()
-        XCTAssertEqual(accepting, false)
-        XCTAssertEqual(tape.position, 0)
-        XCTAssertEqual(machine.matchPos, nil)
-    }
-    
-    func testRegExStateBuilderTapeNotAtBeginning_resetWhenNotMatching() {
-        let reg     = RegExBuilder(regExString: "abcd")
-        let tape    = StringTape(string: "ababce")
-        tape.position = 2
-        let machine = NPDAutomaton(withTape: tape)
-        let compiled = reg.compile(machine: machine)
-        XCTAssert(compiled)
-        let accepting = machine.run()
-        XCTAssertEqual(accepting, false)
-        XCTAssertEqual(tape.position, 2)
-        XCTAssertEqual(machine.matchPos, nil)
-    }
-    
-    
     func testNestedMachines() {
         let tape    = StringTape(string: "abcdefg")
         let machineB = NPDAutomaton(withTape: tape)
@@ -199,29 +144,5 @@ class NPDAutomatonTests: XCTestCase {
         machineA.tape = tape
         XCTAssert(machineA.run())
         XCTAssert(machineA.accepts(input: "abcefg"))
-    }
-    
-    func testRegExStateBuilder_testOrWithExplicitCharacters() {
-        let reg     = RegExBuilder(regExString: "a[bc]d")
-        let tape    = StringTape(string: "abdefg")
-        let machine = NPDAutomaton(withTape: tape)
-        let compiled = reg.compile(machine: machine)
-        XCTAssert(compiled)
-        let accepting = machine.run()
-        XCTAssertEqual(accepting, true)
-        XCTAssertEqual(tape.position, 3)
-        XCTAssertEqual(machine.matchPos, 0)
-    }
-    
-    func testRegExStateBuilder_testOrWithExplicitCharacters_failing() {
-        let reg     = RegExBuilder(regExString: "a[bc]d")
-        let tape    = StringTape(string: "addefg")
-        let machine = NPDAutomaton(withTape: tape)
-        let compiled = reg.compile(machine: machine)
-        XCTAssert(compiled)
-        let accepting = machine.run()
-        XCTAssertEqual(accepting, false)
-        XCTAssertEqual(tape.position, 0)
-        XCTAssertEqual(machine.matchPos, nil)
     }
 }
