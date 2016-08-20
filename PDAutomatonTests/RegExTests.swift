@@ -162,4 +162,31 @@ class RegExTests: XCTestCase {
         XCTAssertEqual(match, 1)
         XCTAssertEqual(re.position, 7)
     }
+    
+    func test_multipleSimultaneousExecutions() {
+        re.pattern = "ab*b*c"
+        var match:Int?
+        match = re.match(subject: "cabcd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.position, 4)
+        XCTAssertEqual(re.matchLength, 3)
+        
+        match = re.match(subject: "cabbbbbbbbbbbcd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 13)
+        
+        re.pattern = "ab*c*d"
+        
+        match = re.match(subject: "ccabcde")
+        XCTAssertEqual(match, 2)
+        XCTAssertEqual(re.matchLength, 4)
+        
+        match = re.match(subject: "ccabbbbbbbbbbbcccccccccccde")
+        XCTAssertEqual(match, 2)
+        XCTAssertEqual(re.matchLength, 24)
+        
+        match = re.match(subject: "ccade")
+        XCTAssertEqual(match, 2)
+        XCTAssertEqual(re.matchLength, 2)
+    }
 }

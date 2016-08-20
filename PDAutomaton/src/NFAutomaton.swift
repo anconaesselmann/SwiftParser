@@ -58,7 +58,7 @@ private extension NFAutomaton {
     func _runMatchBeginning() -> Bool {
         var tempTapePos = _tapePos
         while step() {
-            // TODO: test here if non-greedy matching
+            // TODO: test here if non-greedy matching (probably...)
             if accepting { tempTapePos = _tapePos }
         }
         if _hadPassingState {
@@ -134,7 +134,6 @@ private extension NFAutomaton {
     func _setAccepting(forState state:State) {
         if state.accepting {
             accepting = true
-            print("Last accepting position: \(tape.position)")
             _hadPassingState = true
         }
     }

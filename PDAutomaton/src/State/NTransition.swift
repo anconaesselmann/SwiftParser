@@ -2,9 +2,7 @@ import Foundation
 
 
 class NTransition:TransitionProtocol {
-    var min = 1
-    var max = 1
-    
+    var max = 1 // Maximum number of consecutive visits to the same state
     var trigger:Acceptable!
     var targetState:State!
     
@@ -12,8 +10,6 @@ class NTransition:TransitionProtocol {
         self.trigger     = trigger;
         self.targetState = targetState
     }
-    
-
 }
 extension NTransition:CustomStringConvertible {
     var description: String {
