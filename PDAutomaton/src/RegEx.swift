@@ -12,6 +12,14 @@ class RegEx {
             tape.position = newValue
         }
     }
+    var matchLength: Int {
+        get {
+            guard machine.matchPos != nil else {
+                return 0
+            }
+            return tape.position - machine.matchPos!
+        }
+    }
     private var _pattern = ""
     var pattern:String {
         set {

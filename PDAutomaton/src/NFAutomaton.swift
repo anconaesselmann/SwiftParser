@@ -55,10 +55,6 @@ extension NFAutomaton:Automaton {
 
 private extension NFAutomaton {
     static var counter = 0
-    func _hasFinished() -> Bool {
-         // TODO: make this dependent on a flag that interupts execution when the first match is found before the tape is at the end
-        return accepting
-    }
     func _runMatchBeginning() -> Bool {
         var tempTapePos = _tapePos
         while step() {

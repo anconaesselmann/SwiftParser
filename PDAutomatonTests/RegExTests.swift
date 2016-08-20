@@ -104,10 +104,52 @@ class RegExTests: XCTestCase {
     func test_backtracking_greedyUntilEndOfMatch() {
         re.pattern = "ab*"
         print(re.machine)
-        let input = "cccabbbbbbbbcd"
-        let match = re.match(subject: input)
+        var match:Int?
+        
+        match = re.match(subject: "a")
+        XCTAssertEqual(match, 0)
+        XCTAssertEqual(re.position, 1)
+        XCTAssertEqual(re.matchLength, 1)
+        
+        match = re.match(subject: "ca")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.position, 2)
+        XCTAssertEqual(re.matchLength, 1)
+        
+        match = re.match(subject: "cac")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.position, 2)
+        XCTAssertEqual(re.matchLength, 1)
+        
+        match = re.match(subject: "cab")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.position, 3)
+        XCTAssertEqual(re.matchLength, 2)
+        
+        match = re.match(subject: "cabbbbbbbbbbbbbbbb")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.position, 18)
+        XCTAssertEqual(re.matchLength, 17)
+        
+        match = re.match(subject: "cccabbbbbbbbcd")
         XCTAssertEqual(match, 3)
         XCTAssertEqual(re.position, 12)
+        XCTAssertEqual(re.matchLength, 9)
+        
+        match = re.match(subject: "cccbbbbbbbbcd")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.position, 0)
+        XCTAssertEqual(re.matchLength, 0)
+        
+        match = re.match(subject: "bbbbbbbb")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.position, 0)
+        XCTAssertEqual(re.matchLength, 0)
+        
+        match = re.match(subject: "")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.position, 0)
+        XCTAssertEqual(re.matchLength, 0)
     }
     func test_backtracking2() {
         re.pattern = "ab*b"
