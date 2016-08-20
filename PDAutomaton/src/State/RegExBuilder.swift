@@ -11,7 +11,8 @@ class RegExBuilder {
     private var originState:State!
     private var targetState:State!
     private var linkStates = true
-    private var zeroOrMore = false
+    private var minTransitionCount = 0
+    private var maxTransitionCount:Int?
     private var _currentTriggers:[Acceptable] = []
     private var _actions:[Character:ActionFunction] = [:]
 }
@@ -61,23 +62,23 @@ private extension RegExBuilder {
         if originState !== targetState {
             machine.append(state: originState)
         }
-        if zeroOrMore {
+        if maxTransitionCount == nil {
             _epsilonTransitionToNewState()
         }
         originState      = targetState
         _currentTriggers = []
     }
     func _setTargetState() {
-        if !zeroOrMore {
+        if maxTransitionCount != nil {
             targetState = State()
         }
     }
     func _epsilonTransitionToNewState() {
         targetState = State()
-        let epsilonTransition = EpsilonTransition(targetState: targetState)
+        let epsilonTransition = EpsilonTransition(targetState: targetState, withMin: minTransitionCount)
         originState.append(transition: epsilonTransition)
         machine.append(state: originState)
-        zeroOrMore = false
+        _resetTransitionCounts()
     }
     func _stageTransition(char:Character) {
         _currentTriggers.append(CharToken(char: char))
@@ -106,14 +107,23 @@ private extension RegExBuilder {
     }
     
     
+    
+    func _resetTransitionCounts() {
+        maxTransitionCount = 1
+        minTransitionCount = 1
+    }
+    
     func _zeroOrMoreAction() {
-        zeroOrMore = true
+        maxTransitionCount = nil
+        minTransitionCount = 0
     }
     func _oneOrMoreAction() {
-        
+        maxTransitionCount = nil
+        minTransitionCount = 1
     }
     func _optionalAction() {
-        
+        maxTransitionCount = 1
+        minTransitionCount = 0
     }
     func _initRepetitionAction() {
         
@@ -154,5 +164,7 @@ private extension RegExBuilder {
         _actions["?"] = _optionalAction
         _actions["{"] = _initRepetitionAction
         _actions["}"] = _finishRepetitionAction
+        
+        _resetTransitionCounts()
     }
 }

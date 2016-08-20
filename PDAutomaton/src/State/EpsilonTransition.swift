@@ -11,6 +11,10 @@ class EpsilonTransition:TransitionProtocol {
     init(targetState state:State) {
         targetState = state
     }
+    init(targetState state:State, withMin minimum:Int) {
+        targetState = state
+        min         = minimum
+    }
 }
 extension EpsilonTransition:CustomStringConvertible {
     var description: String {

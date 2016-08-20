@@ -141,6 +141,7 @@ private extension NFAutomaton {
         let _ = recordList.insert(record: record)
         for transition in record.state.transitions {
             guard let targetState = (transition as? EpsilonTransition)?.targetState else {continue}
+            guard (transition as! EpsilonTransition).min <= record.counter.count else {continue}
             if recordList.insert(state: targetState) {
                 _setAccepting(forState: targetState)
                 let newRecord = StateRecord(state: targetState)
@@ -167,7 +168,7 @@ extension NFAutomaton:Acceptable {
         let accepting = run()
         if accepting {
             if !tape.eof {
-                tape.back() // This is wrong
+                tape.back() // TODO: This is wrong
             }
             return accepting
         } else {

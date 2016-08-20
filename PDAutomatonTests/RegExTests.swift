@@ -189,4 +189,21 @@ class RegExTests: XCTestCase {
         XCTAssertEqual(match, 2)
         XCTAssertEqual(re.matchLength, 2)
     }
+    
+    
+    func test_oneOrMore() {
+        re.pattern = "ab+"
+        var match:Int?
+        match = re.match(subject: "cabd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 2)
+        
+        match = re.match(subject: "cad")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+        
+        match = re.match(subject: "cabbbbbd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 6)
+    }
 }

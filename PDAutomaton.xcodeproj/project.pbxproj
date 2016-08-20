@@ -58,7 +58,7 @@
 		9722FC321D5C153D0025A91D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9722FC341D5C153D0025A91D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9722FC391D5C153D0025A91D /* PDAutomatonTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PDAutomatonTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9722FC3D1D5C153D0025A91D /* NPDAutomatonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPDAutomatonTests.swift; sourceTree = "<group>"; };
+		9722FC3D1D5C153D0025A91D /* NPDAutomatonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NPDAutomatonTests.swift; path = ../../PDAutomatonTests/NPDAutomatonTests.swift; sourceTree = "<group>"; };
 		9722FC3F1D5C153D0025A91D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9722FC491D5C157B0025A91D /* Acceptable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Acceptable.swift; sourceTree = "<group>"; };
 		9722FC4E1D5C157B0025A91D /* FSMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FSMachine.swift; sourceTree = "<group>"; };
@@ -141,7 +141,6 @@
 			isa = PBXGroup;
 			children = (
 				97A5EDF61D6794F400BE8196 /* PDAutomatonTests.swift */,
-				9722FC3D1D5C153D0025A91D /* NPDAutomatonTests.swift */,
 				9722FC3F1D5C153D0025A91D /* Info.plist */,
 			);
 			path = PDAutomatonTests;
@@ -221,6 +220,7 @@
 			isa = PBXGroup;
 			children = (
 				9733D7551D665911006E06DD /* NFAutomatonTests.swift */,
+				9722FC3D1D5C153D0025A91D /* NPDAutomatonTests.swift */,
 			);
 			name = NFATests;
 			sourceTree = "<group>";

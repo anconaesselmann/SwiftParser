@@ -137,16 +137,77 @@ class NFAutomatonTest: XCTestCase {
         XCTAssertEqual(nfa.tape.position, 2)
     }
     
-    func testRegExStateBuilder() {
-        let reg     = RegExBuilder(regExString: "abcd")
-        let tape    = StringTape(string: "abcd")
-        let machine = NPDAutomaton(withTape: tape)
-        let compiled = reg.compile(machine: machine)
-        machine.reset()
-        XCTAssertEqual(compiled, true)
-        let accepting = machine.run()
-        XCTAssertEqual(accepting, true)
-        XCTAssertEqual(tape.position, 4)
-        XCTAssertEqual(machine.matchPos, 0)
+    func test_epsilonWithMin() {
+        let tape = StringTape(string: "abb")
+        nfa.tape = tape
+        
+        let s1 = State()
+        let s2 = State()
+        let s3 = State()
+        let s4 = State(accepting: true)
+        
+        let a = CharToken(char: "a")
+        let b = CharToken(char: "b")
+        
+        let t_to2_withA = NTransition(targetState: s2, trigger: a)
+        let t_to2_withB = NTransition(targetState: s2, trigger: b)
+        let t_epsilon   = EpsilonTransition(targetState: s3, withMin: 1)
+        let t_to4_withB = NTransition(targetState: s4, trigger: b)
+        
+        s1.append(transition: t_to2_withA)
+        s2.append(transition: t_to2_withB)
+        s2.append(transition: t_epsilon)
+        s3.append(transition: t_to4_withB)
+        
+        nfa.append(state: s1)
+        nfa.append(state: s2)
+        nfa.append(state: s3)
+        nfa.append(state: s4)
+        
+        XCTAssertEqual(nfa.states.count, 4)
+        
+        nfa.reset()
+        XCTAssertEqual(nfa.currentStates.count, 1)
+        XCTAssert(nfa.currentStates["\(s1.id)_0"]?.state === s1)
+        
+        var stepSuccess = nfa.step()
+        
+        XCTAssert(stepSuccess)
+        XCTAssertEqual(nfa.tape.position, 1)
+        XCTAssertEqual(nfa.currentStates.count, 1)
+        XCTAssert(nfa.currentStates["\(s2.id)_0"]?.state === s2)
+        
+        stepSuccess = nfa.step()
+        
+        XCTAssert(stepSuccess)
+        XCTAssertEqual(nfa.tape.position, 2)
+        XCTAssertEqual(nfa.currentStates.count, 2)
+        XCTAssert(nfa.currentStates["\(s2.id)_1"]?.state === s2)
+        XCTAssert(nfa.currentStates["\(s3.id)_0"]?.state === s3)
+        
+        stepSuccess = nfa.step()
+        
+        XCTAssert(stepSuccess)
+        XCTAssertEqual(nfa.tape.position, 3)
+        XCTAssertEqual(nfa.currentStates.count, 3)
+        XCTAssert(nfa.currentStates["\(s2.id)_2"]?.state === s2)
+        XCTAssert(nfa.currentStates["\(s3.id)_0"]?.state === s3)
+        XCTAssert(nfa.currentStates["\(s4.id)_0"]?.state === s4)
+        
+        stepSuccess = nfa.step()
+        
+        XCTAssertEqual(stepSuccess, false) // This might be wrong...
+        XCTAssertEqual(nfa.tape.position, 3)
+        XCTAssertEqual(nfa.currentStates.count, 0)
+        XCTAssertEqual(nfa.accepting, false)
+        
+        nfa.reset()
+        nfa.tape.position = 0
+        
+        let runSuccess = nfa.run()
+        XCTAssert(runSuccess)
+        XCTAssertEqual(nfa.matchPos, 0)
+        XCTAssertEqual(nfa.tape.position, 3)
     }
+
 }

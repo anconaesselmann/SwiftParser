@@ -7,7 +7,18 @@ class RegExStateBuilderTests: XCTestCase {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
-    
+    func testRegExStateBuilderEntireStringMatches() {
+        let reg     = RegExBuilder(regExString: "abcd")
+        let tape    = StringTape(string: "abcd")
+        let machine = NPDAutomaton(withTape: tape)
+        let compiled = reg.compile(machine: machine)
+        machine.reset()
+        XCTAssertEqual(compiled, true)
+        let accepting = machine.run()
+        XCTAssertEqual(accepting, true)
+        XCTAssertEqual(tape.position, 4)
+        XCTAssertEqual(machine.matchPos, 0)
+    }
     func testRegExStateBuilder() {
         let reg     = RegExBuilder(regExString: "abcd")
         let tape    = StringTape(string: "abcdefg")
