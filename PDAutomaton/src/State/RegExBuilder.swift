@@ -11,10 +11,11 @@ class RegExBuilder {
     private var originState:State!
     private var targetState:State!
     private var linkStates = true
-    private var minTransitionCount = 0
-    private var maxTransitionCount:Int?
+    private var minTransitionCount = 1
+    private var maxTransitionCount = 1
     private var _currentTriggers:[Acceptable] = []
     private var _actions:[Character:ActionFunction] = [:]
+    private var _createEpsilon = false
 }
 extension RegExBuilder: StateBuilder {
     func compile(machine:Automaton) -> Bool {
@@ -57,19 +58,19 @@ private extension RegExBuilder {
         guard _currentTriggers.count > 0 else {return}
         _setTargetState()
         for trigger in _currentTriggers {
-            originState.append(transition: NTransition(targetState: targetState, trigger:trigger))
+            originState.append(transition: NTransition(targetState: targetState, trigger:trigger, withMax: maxTransitionCount))
         }
         if originState !== targetState {
             machine.append(state: originState)
         }
-        if maxTransitionCount == nil {
+        if _createEpsilon {
             _epsilonTransitionToNewState()
         }
         originState      = targetState
         _currentTriggers = []
     }
     func _setTargetState() {
-        if maxTransitionCount != nil {
+        if !_createEpsilon {
             targetState = State()
         }
     }
@@ -111,19 +112,23 @@ private extension RegExBuilder {
     func _resetTransitionCounts() {
         maxTransitionCount = 1
         minTransitionCount = 1
+        _createEpsilon = false
     }
     
     func _zeroOrMoreAction() {
-        maxTransitionCount = nil
+        maxTransitionCount = Int.max
         minTransitionCount = 0
+        _createEpsilon = true
     }
     func _oneOrMoreAction() {
-        maxTransitionCount = nil
+        maxTransitionCount = Int.max
         minTransitionCount = 1
+        _createEpsilon = true
     }
     func _optionalAction() {
         maxTransitionCount = 1
         minTransitionCount = 0
+        _createEpsilon = true
     }
     func _initRepetitionAction() {
         

@@ -100,9 +100,13 @@ private extension NFAutomaton {
         var transitionMade = false
         for transition in record.state.transitions {
             guard let transition = transition as? NTransition else {continue}
-            if _acceptTransition(transiton: transition, token: token) {
+            if _acceptTransition(transition: transition, token: token) {
                 let targetState = transition.targetState!
+                print(transition.max, record.counter.count)
                 let count = (record.state === targetState) ? record.counter.count + 1 : 0
+                guard transition.max >= count else {
+                    return false
+                }
                 if recordList.insert(state: targetState, withCount: count) {
                     transitionMade = true
                     _setAccepting(forState: targetState)
@@ -112,11 +116,11 @@ private extension NFAutomaton {
         }
         return transitionMade
     }
-    func _acceptTransition(transiton:NTransition, token: AnyObject) -> Bool {
-        if let automaton = transiton.trigger as? Automaton {
+    func _acceptTransition(transition:NTransition, token: AnyObject) -> Bool {
+        if let automaton = transition.trigger as? Automaton {
             automaton.reset()
         }
-        return transiton.trigger.accepts(input: token)
+        return transition.trigger.accepts(input: token)
     }
     func _initCurrentStates() {
         guard states.count > 0 else { return }
