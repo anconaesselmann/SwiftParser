@@ -6,5 +6,7 @@ extension RegExBuilder {
         case CreateEpsilon
         case ReadOrBracket
         case ReadRepetitionValue
+        case ReadEscapedChar
+        case CreateNewState
     }
 }

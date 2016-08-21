@@ -1,39 +1,25 @@
 import Foundation
 
 class RegExBuilder {
-    typealias ActionFunction = () -> RegExState
+    typealias ActionFunction = () -> Void
     
-    var machine:NPDAutomaton!
+    var machine:NPDAutomaton! {
+        didSet {
+            linking = LinkingProperties()
+            resetTransitionCounts()
+        }
+    }
     var regExString:String = ""
     init(withPattern pattern:String) {regExString = pattern}
     
-    private var linking:LinkingProperties!
-    private var transitioning = TransitionProperties()
+    var linking:LinkingProperties!
+    var transitioning = TransitionProperties()
+    var state:RegExState = .Default
+    var escapeChar:Character = "\\"
     private var currentTriggers:[Acceptable]       = []
     private var actions:[Character:ActionFunction] = [:]
-    private var state:RegExState = .Default
-}
-extension RegExBuilder: StateBuilder {
-    func compile(machine:Automaton) -> Bool {
-        guard let machine = machine as? NPDAutomaton else {return false}
-        initiate(machine: machine)
-        for char in regExString.characters {
-            if isSpecialSymbol(char: char) {
-                guard let actionFunction = actions[char] else {return false}
-                state = actionFunction()
-            } else {
-                commitPreviousTransactions()
-                stageTransition(char: char)
-            }
-        }
-        commitPreviousTransactions()
-        setAcceptingStates()
-        machine.append(state: linking.target)
-        machine.reset()
-        return true
-    }
-}
-private extension RegExBuilder {
+    private let initializer = RegExBuilderInitializer()
+    
     func commitPreviousTransactions() {
         guard shouldCommitTransaction() else {return}
         setTargetState()
@@ -55,9 +41,37 @@ private extension RegExBuilder {
         linking.targetBecomesOrigin()
         currentTriggers = []
     }
+    func setAction(_ char: Character, action:()->Void) {
+        actions[char] = action
+    }
+}
+extension RegExBuilder: StateBuilder {
+    func compile(machine:Automaton) -> Bool {
+        guard let machine = machine as? NPDAutomaton else {return false}
+        self.machine = machine
+        initializer.initialize(builder: self, machine: machine)
+        for char in regExString.characters {
+            if isSpecialSymbol(char: char) {
+                guard let actionFunction = actions[char] else {return false}
+                actionFunction()
+            } else {
+                commitPreviousTransactions()
+                stageTransition(char: char)
+            }
+        }
+        commitPreviousTransactions()
+        setAcceptingStates()
+        machine.append(state: linking.target)
+        machine.reset()
+        return true
+    }
+}
+private extension RegExBuilder {
     func shouldCommitTransaction() -> Bool {
+        // TODO: Split state into two, one governing committing, one governing other behaviour
         guard state != .ReadOrBracket else {return false}
         guard state != .ReadRepetitionValue else {return false}
+        guard state != .ReadEscapedChar else {return false}
         guard currentTriggers.count > 0 else {return false}
         return true
     }
@@ -91,6 +105,10 @@ private extension RegExBuilder {
         linking.target.accepting = true
     }
     func isSpecialSymbol(char: Character) -> Bool {
+        if state == .ReadEscapedChar {
+            state = .Default
+            return false // TODO: Deal with escaped escape characters
+        }
         for (symbol, _) in actions {
             if symbol == char {return true}
         }
@@ -99,58 +117,5 @@ private extension RegExBuilder {
     func resetTransitionCounts() {
         transitioning = TransitionProperties()
         state         = .Default
-    }
-    func setAction(_ char: Character, action:()->RegExState) {
-        actions[char] = action
-    }
-    func initiate(machine:NPDAutomaton) {
-        self.machine = machine
-        machine.addStackSymbol(record: SquareStackRecord())
-        machine.addStackSymbol(record: BraceStackRecord())
-        machine.addStackSymbol(record: CurlyStackRecord())
-        linking = LinkingProperties()
-        if regExString[regExString.startIndex] == "^" {
-            let secondChar = regExString.index(regExString.startIndex, offsetBy: 1)
-            regExString = regExString.substring(from: secondChar)
-        } else {
-            machine.matchBeginning = false
-        }
-        setAction("[") { [unowned self] in
-            self.commitPreviousTransactions()
-            machine.push(record: SquareStackRecord())
-            return .ReadOrBracket
-        }
-        setAction("]") {
-            _ = machine.pop()
-            return .Default
-        }
-        setAction("*") { [unowned self] in
-            self.transitioning = TransitionProperties(min: 0, max: Int.max)
-            return .CreateEpsilon
-        }
-        setAction("+") { [unowned self] in
-            self.transitioning = TransitionProperties(min: 1, max: Int.max)
-            return .CreateEpsilon
-        }
-        setAction("?") { [unowned self] in
-            self.transitioning = TransitionProperties(min: 0, max: 1)
-            return .CreateEpsilon
-        }
-        setAction("{") { [unowned self] in
-            self.transitioning = TransitionProperties(min: 0, max: 0)
-            return .ReadRepetitionValue
-        }
-        setAction(",") { [unowned self] in
-            self.transitioning.minTransitionCount = self.transitioning.maxTransitionCount
-            self.transitioning.maxTransitionCount = 0
-            return .ReadRepetitionValue
-        }
-        setAction("}") { [unowned self] in
-            if self.transitioning.minTransitionCount < 1 {
-                self.transitioning.minTransitionCount = self.transitioning.maxTransitionCount
-            }
-            return .CreateEpsilon
-        }
-        resetTransitionCounts()
     }
 }

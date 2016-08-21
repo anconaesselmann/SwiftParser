@@ -268,8 +268,6 @@ class NFAutomatonTest: XCTestCase {
         
         stepSuccess = nfa.step()
         
-        print(nfa.currentStates)
-        
         XCTAssertEqual(stepSuccess, false)
         XCTAssertEqual(nfa.tape.position, 3)
         XCTAssertEqual(nfa.currentStates.count, 0)

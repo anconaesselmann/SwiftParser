@@ -103,7 +103,6 @@ class RegExTests: XCTestCase {
     }
     func test_backtracking_greedyUntilEndOfMatch() {
         re.pattern = "ab*"
-        print(re.machine)
         var match:Int?
         
         match = re.match(subject: "a")
@@ -194,7 +193,6 @@ class RegExTests: XCTestCase {
     func test_oneOrMore() {
         re.pattern = "ab+"
         var match:Int?
-        print(re.machine)
         match = re.match(subject: "cabd")
         XCTAssertEqual(match, 1)
         XCTAssertEqual(re.matchLength, 2)
@@ -208,7 +206,6 @@ class RegExTests: XCTestCase {
         XCTAssertEqual(re.matchLength, 6)
         
         re.pattern = "ab+c"
-        print(re.machine)
         match = re.match(subject: "cabcd")
         XCTAssertEqual(match, 1)
         XCTAssertEqual(re.matchLength, 3)
@@ -241,7 +238,6 @@ class RegExTests: XCTestCase {
     func test_repetition() {
         re.pattern = "ab{13}c"
         var match:Int?
-        print(re.machine)
         match = re.match(subject: "cabbbbbbbbbbbbbcd")
         XCTAssertEqual(match, 1)
         XCTAssertEqual(re.matchLength, 15)
@@ -258,7 +254,6 @@ class RegExTests: XCTestCase {
     func test_range() {
         re.pattern = "ab{2,4}c"
         var match:Int?
-        print(re.machine)
         match = re.match(subject: "cabcd")
         XCTAssertEqual(match, nil)
         XCTAssertEqual(re.matchLength, 0)
@@ -278,5 +273,24 @@ class RegExTests: XCTestCase {
         match = re.match(subject: "cabbbbbcd")
         XCTAssertEqual(match, nil)
         XCTAssertEqual(re.matchLength, 0)
+    }
+    
+    func test_matchEscapedSpecialSymbols() {
+        re.pattern = "\\[\\]\\(\\)\\{\\}\\*\\+\\?\\,"
+        var match:Int?
+        
+        match = re.match(subject: "][)(}{*+?,")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+        
+        match = re.match(subject: "[](){}*+?,")
+        XCTAssertEqual(match, 0)
+        XCTAssertEqual(re.matchLength, 10)
+        
+        re.pattern = "\\[[52431]*\\]"
+        print(re.machine)
+        match = re.match(subject: "a[12345]a")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 7)
     }
 }

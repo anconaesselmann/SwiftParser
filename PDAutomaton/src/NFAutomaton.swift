@@ -36,6 +36,9 @@ extension NFAutomaton:Automaton {
         guard !tape.eof else {return false}
         accepting = false
         let token = tape.get()!
+        
+        let tempChar = (token as! CharToken).char
+        print(tempChar)
         if _makeNonDeterministicTransitions(forToken: token) {
             _makeEpsilonTransitions()
             tape.advance()
@@ -84,7 +87,6 @@ private extension NFAutomaton {
         var transitionMade = false
         let temp           = StateRecordList()
         for (_, record) in currentStates {
-            print(token, record)
             if _makeNonDeterministicTransitions(
                 forRecord: record,
                 withToken: token,
@@ -102,7 +104,6 @@ private extension NFAutomaton {
             guard let transition = transition as? NTransition else {continue}
             if _acceptTransition(transition: transition, token: token) {
                 let targetState = transition.targetState!
-                print(transition.max, record.counter.count)
                 let count = (record.state === targetState) ? record.counter.count + 1 : 0
                 guard transition.max >= count else {
                     return false
@@ -110,7 +111,6 @@ private extension NFAutomaton {
                 if recordList.insert(state: targetState, withCount: count) {
                     transitionMade = true
                     _setAccepting(forState: targetState)
-                    print(recordList)
                 }
             }
         }

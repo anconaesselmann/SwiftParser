@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "PDAutomatonTests/NFAutomatonTests.swift"
-            timestampString = "493371742.354669"
+            timestampString = "493500800.708475"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "273"
-            endingLineNumber = "273"
+            startingLineNumber = "271"
+            endingLineNumber = "271"
             landmarkName = "test_zeroOrOne()"
             landmarkType = "7">
             <Locations>
@@ -87,14 +87,15 @@
          <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
+            condition = "tempChar == &quot;]&quot;"
             continueAfterRunningActions = "No"
-            filePath = "PDAutomaton/src/State/RegExBuilder.swift"
-            timestampString = "493498639.576255"
+            filePath = "PDAutomaton/src/NFAutomaton.swift"
+            timestampString = "493502228.123242"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "152"
-            endingLineNumber = "152"
-            landmarkName = "initiate(machine:)"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
+            landmarkName = "step()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

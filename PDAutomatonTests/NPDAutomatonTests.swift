@@ -28,8 +28,6 @@ class NPDAutomatonTests: XCTestCase {
         machine.append(state: s2)
         machine.append(state: s3)
         machine.append(state: final)
-        
-        print(machine)
 
         XCTAssert(machine.step())
         XCTAssert(machine.accepting == false)

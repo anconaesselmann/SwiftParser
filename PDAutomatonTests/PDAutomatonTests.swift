@@ -130,8 +130,6 @@ class PDAutomatonTests: XCTestCase {
         machineA.append(state: s4A)
         machineA.append(state: finalA)
         
-        print(machineA)
-        
         XCTAssert(machineA.step())
         XCTAssert(machineA.currentState!.accepting == false)
         XCTAssert(machineA.step())
