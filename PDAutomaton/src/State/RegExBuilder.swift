@@ -6,6 +6,7 @@ class RegExBuilder {
     var machine:NPDAutomaton!
     var regExString:String = ""
     init(withPattern pattern:String) {regExString = pattern}
+    
     private var linking:LinkingProperties!
     private var transitioning = TransitionProperties()
     private var currentTriggers:[Acceptable]       = []
@@ -34,9 +35,7 @@ extension RegExBuilder: StateBuilder {
 }
 private extension RegExBuilder {
     func commitPreviousTransactions() {
-        guard state != .ReadOrBracket else {return}
-        guard state != .ReadRepetitionValue else {return}
-        guard currentTriggers.count > 0 else {return}
+        guard shouldCommitTransaction() else {return}
         setTargetState()
         for trigger in currentTriggers {
             linking.origin.append(
@@ -55,6 +54,12 @@ private extension RegExBuilder {
         }
         linking.targetBecomesOrigin()
         currentTriggers = []
+    }
+    func shouldCommitTransaction() -> Bool {
+        guard state != .ReadOrBracket else {return false}
+        guard state != .ReadRepetitionValue else {return false}
+        guard currentTriggers.count > 0 else {return false}
+        return true
     }
     func setTargetState() {
         if state == .Default {
@@ -86,19 +91,8 @@ private extension RegExBuilder {
         linking.target.accepting = true
     }
     func isSpecialSymbol(char: Character) -> Bool {
-        if isStackSymbol(char) {return true}
-        switch char {
-            case "*","+","?",",": return true
-            default: return false
-        }
-    }
-    func isStackSymbol(_ char: Character) -> Bool {
-        for stackSymbol in machine.stackSymbols {
-            if char == stackSymbol.pushChar?.char ||
-               char == stackSymbol.popChar?.char
-            {
-                return true
-            }
+        for (symbol, _) in actions {
+            if symbol == char {return true}
         }
         return false
     }
