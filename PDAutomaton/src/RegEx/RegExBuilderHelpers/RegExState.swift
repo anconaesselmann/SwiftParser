@@ -5,8 +5,6 @@ extension RegExBuilder {
         case Default
         case CreateEpsilon
         case ReadOrBracket
-        case ReadFirstRepetitionValue
-        case ReadSecondRepetitionValue
-        case FinishingRepetition
+        case ReadRepetitionValue
     }
 }

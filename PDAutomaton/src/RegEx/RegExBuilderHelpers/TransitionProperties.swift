@@ -1,7 +1,7 @@
 import Foundation
 
 extension RegExBuilder {
-    struct TransitionProperties {
+    class TransitionProperties {
         var minTransitionCount:Int
         var maxTransitionCount:Int
         init() {

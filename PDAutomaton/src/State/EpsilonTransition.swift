@@ -18,6 +18,6 @@ class EpsilonTransition:TransitionProtocol {
 }
 extension EpsilonTransition:CustomStringConvertible {
     var description: String {
-        return "Trigger 'Epsylon' -> State '\(targetState.id!)'"
+        return "Trigger 'Epsylon' -> State '\(targetState.id!)' min: \(min)"
     }
 }

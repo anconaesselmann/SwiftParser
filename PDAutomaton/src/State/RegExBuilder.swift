@@ -35,6 +35,7 @@ extension RegExBuilder: StateBuilder {
 private extension RegExBuilder {
     func commitPreviousTransactions() {
         guard state != .ReadOrBracket else {return}
+        guard state != .ReadRepetitionValue else {return}
         guard currentTriggers.count > 0 else {return}
         setTargetState()
         for trigger in currentTriggers {
@@ -70,7 +71,15 @@ private extension RegExBuilder {
         machine.append(state: linking.origin)
         resetTransitionCounts()
     }
+    func updateTransitionCount(_ char:Character) {
+        guard let newInt = Int("\(char)") else {return}
+        transitioning.maxTransitionCount = transitioning.maxTransitionCount * 10 + newInt
+    }
     func stageTransition(char:Character) {
+        guard state != .ReadRepetitionValue else {
+            updateTransitionCount(char)
+            return
+        }
         currentTriggers.append(CharToken(char: char))
     }
     func setAcceptingStates() {
@@ -133,9 +142,21 @@ private extension RegExBuilder {
             self.transitioning = TransitionProperties(min: 0, max: 1)
             return .CreateEpsilon
         }
-        setAction("{") {.ReadFirstRepetitionValue}
-        setAction("}") {.ReadSecondRepetitionValue}
-        setAction(",") {.FinishingRepetition}
+        setAction("{") { [unowned self] in
+            self.transitioning = TransitionProperties(min: 0, max: 0)
+            return .ReadRepetitionValue
+        }
+        setAction(",") { [unowned self] in
+            self.transitioning.minTransitionCount = self.transitioning.maxTransitionCount
+            self.transitioning.maxTransitionCount = 0
+            return .ReadRepetitionValue
+        }
+        setAction("}") { [unowned self] in
+            if self.transitioning.minTransitionCount < 1 {
+                self.transitioning.minTransitionCount = self.transitioning.maxTransitionCount
+            }
+            return .CreateEpsilon
+        }
         resetTransitionCounts()
     }
 }

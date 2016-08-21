@@ -21,8 +21,7 @@ class NTransition:TransitionProtocol {
 }
 extension NTransition:CustomStringConvertible {
     var description: String {
-        let repetiton = (max != 1) ? " \(max)" : ""
-        return "Trigger '\(trigger!)' -> State '\(targetState.id!)'\(repetiton)"
+        return "Trigger '\(trigger!)' -> State '\(targetState.id!)' max: \(max)"
     }
 }
 

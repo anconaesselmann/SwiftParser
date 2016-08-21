@@ -194,6 +194,7 @@ class RegExTests: XCTestCase {
     func test_oneOrMore() {
         re.pattern = "ab+"
         var match:Int?
+        print(re.machine)
         match = re.match(subject: "cabd")
         XCTAssertEqual(match, 1)
         XCTAssertEqual(re.matchLength, 2)
@@ -205,6 +206,20 @@ class RegExTests: XCTestCase {
         match = re.match(subject: "cabbbbbd")
         XCTAssertEqual(match, 1)
         XCTAssertEqual(re.matchLength, 6)
+        
+        re.pattern = "ab+c"
+        print(re.machine)
+        match = re.match(subject: "cabcd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 3)
+        
+        match = re.match(subject: "cacd")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+        
+        match = re.match(subject: "cabbbcd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 5)
     }
     
     func test_zeroOrOne() {
@@ -222,45 +237,46 @@ class RegExTests: XCTestCase {
         XCTAssertEqual(match, nil)
         XCTAssertEqual(re.matchLength, 0)
     }
-//
-//    func test_repetition() {
-//        re.pattern = "ab{3}c"
-//        var match:Int?
-//        match = re.match(subject: "cabbbcd")
-//        XCTAssertEqual(match, 1)
-//        XCTAssertEqual(re.matchLength, 5)
-//        
-//        match = re.match(subject: "cabbbbcd")
-//        XCTAssertEqual(match, nil)
-//        XCTAssertEqual(re.matchLength, 0)
-//        
-//        match = re.match(subject: "cabbcd")
-//        XCTAssertEqual(match, nil)
-//        XCTAssertEqual(re.matchLength, 0)
-//    }
-//    
-//    func test_range() {
-//        re.pattern = "ab{2,4}c"
-//        var match:Int?
-//        
-//        match = re.match(subject: "cabcd")
-//        XCTAssertEqual(match, nil)
-//        XCTAssertEqual(re.matchLength, 0)
-//        
-//        match = re.match(subject: "cabbcd")
-//        XCTAssertEqual(match, 1)
-//        XCTAssertEqual(re.matchLength, 4)
-//        
-//        match = re.match(subject: "cabbbcd")
-//        XCTAssertEqual(match, 1)
-//        XCTAssertEqual(re.matchLength, 5)
-//        
-//        match = re.match(subject: "cabbbbcd")
-//        XCTAssertEqual(match, 1)
-//        XCTAssertEqual(re.matchLength, 6)
-//        
-//        match = re.match(subject: "cabbbbbcd")
-//        XCTAssertEqual(match, nil)
-//        XCTAssertEqual(re.matchLength, 0)
-//    }
+
+    func test_repetition() {
+        re.pattern = "ab{13}c"
+        var match:Int?
+        print(re.machine)
+        match = re.match(subject: "cabbbbbbbbbbbbbcd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 15)
+        
+        match = re.match(subject: "cabbbbbbbbbbbbbbcd")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+        
+        match = re.match(subject: "cabbbbbbbbbbbbcd")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+    }
+
+    func test_range() {
+        re.pattern = "ab{2,4}c"
+        var match:Int?
+        print(re.machine)
+        match = re.match(subject: "cabcd")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+        
+        match = re.match(subject: "cabbcd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 4)
+        
+        match = re.match(subject: "cabbbcd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 5)
+        
+        match = re.match(subject: "cabbbbcd")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 6)
+        
+        match = re.match(subject: "cabbbbbcd")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+    }
 }
