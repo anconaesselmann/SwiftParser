@@ -1,6 +1,6 @@
 import Foundation
 
-class StateRecord {
+struct StateRecord {
     init(state:State) {
         self.state = state
         counter = Counter()

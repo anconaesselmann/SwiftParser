@@ -32,6 +32,9 @@
 		9733D7591D66617E006E06DD /* EpsilonTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9733D7581D66617E006E06DD /* EpsilonTransition.swift */; };
 		9733D75B1D66619F006E06DD /* TransitionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9733D75A1D66619F006E06DD /* TransitionProtocol.swift */; };
 		9751DC251D67D8EB00A760E1 /* RegExStateBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC241D67D8EB00A760E1 /* RegExStateBuilderTests.swift */; };
+		9751DC281D68E5C700A760E1 /* TransitionProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC271D68E5C700A760E1 /* TransitionProperties.swift */; };
+		9751DC2A1D68E64100A760E1 /* RegExState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC291D68E64100A760E1 /* RegExState.swift */; };
+		9751DC2C1D68E66100A760E1 /* LinkingProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC2B1D68E66100A760E1 /* LinkingProperties.swift */; };
 		976A37231D628516004283F3 /* RegEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976A37221D628516004283F3 /* RegEx.swift */; };
 		976A37251D628AD2004283F3 /* RegExTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976A37241D628AD2004283F3 /* RegExTests.swift */; };
 		97A5EDF71D6794F400BE8196 /* PDAutomatonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A5EDF61D6794F400BE8196 /* PDAutomatonTests.swift */; };
@@ -80,6 +83,9 @@
 		9733D7581D66617E006E06DD /* EpsilonTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EpsilonTransition.swift; path = State/EpsilonTransition.swift; sourceTree = "<group>"; };
 		9733D75A1D66619F006E06DD /* TransitionProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransitionProtocol.swift; path = State/TransitionProtocol.swift; sourceTree = "<group>"; };
 		9751DC241D67D8EB00A760E1 /* RegExStateBuilderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegExStateBuilderTests.swift; path = PDAutomatonTests/RegExStateBuilderTests.swift; sourceTree = SOURCE_ROOT; };
+		9751DC271D68E5C700A760E1 /* TransitionProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransitionProperties.swift; path = RegEx/RegExBuilderHelpers/TransitionProperties.swift; sourceTree = "<group>"; };
+		9751DC291D68E64100A760E1 /* RegExState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegExState.swift; path = RegEx/RegExBuilderHelpers/RegExState.swift; sourceTree = "<group>"; };
+		9751DC2B1D68E66100A760E1 /* LinkingProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LinkingProperties.swift; path = RegEx/RegExBuilderHelpers/LinkingProperties.swift; sourceTree = "<group>"; };
 		976A37221D628516004283F3 /* RegEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegEx.swift; sourceTree = "<group>"; };
 		976A37241D628AD2004283F3 /* RegExTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegExTests.swift; path = PDAutomatonTests/RegExTests.swift; sourceTree = SOURCE_ROOT; };
 		97A5EDF61D6794F400BE8196 /* PDAutomatonTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PDAutomatonTests.swift; sourceTree = "<group>"; };
@@ -228,6 +234,7 @@
 		9751DC221D67D88000A760E1 /* RegEx */ = {
 			isa = PBXGroup;
 			children = (
+				9751DC261D68E58600A760E1 /* RegExBuilderHelpers */,
 				976A37221D628516004283F3 /* RegEx.swift */,
 				9722FC551D5C157B0025A91D /* RegExBuilder.swift */,
 			);
@@ -241,6 +248,16 @@
 				9751DC241D67D8EB00A760E1 /* RegExStateBuilderTests.swift */,
 			);
 			name = RegExTests;
+			sourceTree = "<group>";
+		};
+		9751DC261D68E58600A760E1 /* RegExBuilderHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				9751DC271D68E5C700A760E1 /* TransitionProperties.swift */,
+				9751DC291D68E64100A760E1 /* RegExState.swift */,
+				9751DC2B1D68E66100A760E1 /* LinkingProperties.swift */,
+			);
+			name = RegExBuilderHelpers;
 			sourceTree = "<group>";
 		};
 		97DC151F1D6681E0001B32CB /* supporting */ = {
@@ -354,6 +371,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9751DC281D68E5C700A760E1 /* TransitionProperties.swift in Sources */,
 				9733D7541D66581A006E06DD /* Counter.swift in Sources */,
 				976A37231D628516004283F3 /* RegEx.swift in Sources */,
 				9722FC651D5C157B0025A91D /* PDAutomaton.swift in Sources */,
@@ -362,9 +380,11 @@
 				9722FC691D5C157B0025A91D /* State.swift in Sources */,
 				9722FC661D5C157B0025A91D /* Stack.swift in Sources */,
 				9722FC6D1D5C157B0025A91D /* Tape.swift in Sources */,
+				9751DC2A1D68E64100A760E1 /* RegExState.swift in Sources */,
 				9722FC631D5C157B0025A91D /* FSMachine.swift in Sources */,
 				9733D74B1D64437A006E06DD /* NFAutomaton.swift in Sources */,
 				9722FC6B1D5C157B0025A91D /* Transition.swift in Sources */,
+				9751DC2C1D68E66100A760E1 /* LinkingProperties.swift in Sources */,
 				9722FC2E1D5C153D0025A91D /* ViewController.swift in Sources */,
 				97DC15211D66820E001B32CB /* StateRecordList.swift in Sources */,
 				9733D75B1D66619F006E06DD /* TransitionProtocol.swift in Sources */,

@@ -37,7 +37,7 @@ class RegEx {
     private func _compile(pattern:String) -> Bool {
         tape         = StringTape()
         machine      = NPDAutomaton()
-        regExBuilder = RegExBuilder(regExString: pattern)
+        regExBuilder = RegExBuilder(withPattern: pattern)
         machine.tape = tape
         return regExBuilder.compile(machine: machine)
     }

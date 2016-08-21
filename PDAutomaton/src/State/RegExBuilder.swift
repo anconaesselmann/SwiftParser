@@ -1,196 +1,141 @@
 import Foundation
 
 class RegExBuilder {
-    typealias ActionFunction = () -> Void
+    typealias ActionFunction = () -> RegExState
     
     var machine:NPDAutomaton!
     var regExString:String = ""
-    init(regExString:String) {
-        self.regExString = regExString
-    }
-    private var originState:State!
-    private var targetState:State!
-    private var minTransitionCount = 1
-    private var maxTransitionCount = 1
-    private var _currentTriggers:[Acceptable] = []
-    private var _actions:[Character:ActionFunction] = [:]
-    private var _state:RegExState = .Default
+    init(withPattern pattern:String) {regExString = pattern}
+    private var linking:LinkingProperties!
+    private var transitioning = TransitionProperties()
+    private var currentTriggers:[Acceptable]       = []
+    private var actions:[Character:ActionFunction] = [:]
+    private var state:RegExState = .Default
 }
 extension RegExBuilder: StateBuilder {
     func compile(machine:Automaton) -> Bool {
         guard let machine = machine as? NPDAutomaton else {return false}
-        _initiate(machine: machine)
+        initiate(machine: machine)
         for char in regExString.characters {
-            if _isSpecialSymbol(char: char) {
-                guard let actionFunction = _actions[char] else {return false}
-                actionFunction()
+            if isSpecialSymbol(char: char) {
+                guard let actionFunction = actions[char] else {return false}
+                state = actionFunction()
             } else {
-                _commitPreviousTransactions()
-                _stageTransition(char: char)
+                commitPreviousTransactions()
+                stageTransition(char: char)
             }
         }
-        _commitPreviousTransactions()
-        _setAcceptingStates()
-        machine.append(state: targetState)
+        commitPreviousTransactions()
+        setAcceptingStates()
+        machine.append(state: linking.target)
         machine.reset()
         return true
     }
 }
 private extension RegExBuilder {
-    enum RegExState {
-        case Default
-        case CreateEpsilon
-        case ReadOrBracket
-        case ReadFirstRepetitionValue
-        case ReadSecondRepetitionValue
-    }
-}
-private extension RegExBuilder {
-    func _initSquareOrAction() {
-        _commitPreviousTransactions()
-        machine.push(record:
-            StackRecord(
-                data: nil,
-                pushChar: CharToken(char:"["),
-                popChar: CharToken(char:"]")
+    func commitPreviousTransactions() {
+        guard state != .ReadOrBracket else {return}
+        guard currentTriggers.count > 0 else {return}
+        setTargetState()
+        for trigger in currentTriggers {
+            linking.origin.append(
+                transition: NTransition(
+                    targetState: linking.target,
+                    trigger:     trigger,
+                    withMax:     transitioning.maxTransitionCount
+                )
             )
+        }
+        if !linking.statesAreEqual() {
+            machine.append(state: linking.origin)
+        }
+        if state == .CreateEpsilon {
+            epsilonTransitionToNewState()
+        }
+        linking.targetBecomesOrigin()
+        currentTriggers = []
+    }
+    func setTargetState() {
+        if state == .Default {
+            linking.newTarget()
+        }
+    }
+    func epsilonTransitionToNewState() {
+        linking.newTarget()
+        let epsilonTransition = EpsilonTransition(
+            targetState: linking.target,
+            withMin:     transitioning.minTransitionCount
         )
-        _state = .ReadOrBracket
+        linking.origin.append(transition: epsilonTransition)
+        machine.append(state: linking.origin)
+        resetTransitionCounts()
     }
-    func _finishSquareOrAction() {
-        let _  = machine.pop()
-        _state = .Default
+    func stageTransition(char:Character) {
+        currentTriggers.append(CharToken(char: char))
     }
-    func _commitPreviousTransactions() {
-        guard _state != .ReadOrBracket else {return}
-        guard _currentTriggers.count > 0 else {return}
-        _setTargetState()
-        for trigger in _currentTriggers {
-            originState.append(transition: NTransition(targetState: targetState, trigger:trigger, withMax: maxTransitionCount))
-        }
-        if originState !== targetState {
-            machine.append(state: originState)
-        }
-        if _state == .CreateEpsilon {
-            _epsilonTransitionToNewState()
-        }
-        originState      = targetState
-        _currentTriggers = []
+    func setAcceptingStates() {
+        linking.target.accepting = true
     }
-    func _setTargetState() {
-        if _state == .Default {
-            targetState = State()
+    func isSpecialSymbol(char: Character) -> Bool {
+        if isStackSymbol(char) {return true}
+        switch char {
+            case "*","+","?",",": return true
+            default: return false
         }
     }
-    func _epsilonTransitionToNewState() {
-        targetState = State()
-        let epsilonTransition = EpsilonTransition(targetState: targetState, withMin: minTransitionCount)
-        originState.append(transition: epsilonTransition)
-        machine.append(state: originState)
-        _resetTransitionCounts()
-    }
-    func _stageTransition(char:Character) {
-        _currentTriggers.append(CharToken(char: char))
-    }
-    func _setAcceptingStates() {
-        targetState.accepting = true
-    }
-    func _isSpecialSymbol(char: Character) -> Bool {
+    func isStackSymbol(_ char: Character) -> Bool {
         for stackSymbol in machine.stackSymbols {
             if char == stackSymbol.pushChar?.char ||
-                char == stackSymbol.popChar?.char
+               char == stackSymbol.popChar?.char
             {
                 return true
             }
         }
-        switch char {
-        case "*":
-            return true
-        case "+":
-            return true
-        case "?":
-            return true
-        case ",":
-            return true
-        default:
-            return false
-        }
+        return false
     }
-    
-    
-    
-    func _resetTransitionCounts() {
-        maxTransitionCount = 1
-        minTransitionCount = 1
-        _state = .Default
+    func resetTransitionCounts() {
+        transitioning = TransitionProperties()
+        state         = .Default
     }
-    
-    func _zeroOrMoreAction() {
-        maxTransitionCount = Int.max
-        minTransitionCount = 0
-        _state = .CreateEpsilon
+    func setAction(_ char: Character, action:()->RegExState) {
+        actions[char] = action
     }
-    func _oneOrMoreAction() {
-        maxTransitionCount = Int.max
-        minTransitionCount = 1
-        _state = .CreateEpsilon
-    }
-    func _optionalAction() {
-        maxTransitionCount = 1
-        minTransitionCount = 0
-        _state = .CreateEpsilon
-    }
-    func _initRepetitionAction() {
-        _state = .ReadFirstRepetitionValue
-    }
-    func _finishRepetitionAction() {
-        
-    }
-    func _commaAction() {
-        _state = .ReadSecondRepetitionValue
-    }
-    
-    func _initiate(machine:NPDAutomaton) {
+    func initiate(machine:NPDAutomaton) {
         self.machine = machine
-        let initial = State();
-        machine.addStackSymbol(
-            record: StackRecord(
-                data: nil,
-                pushChar: CharToken(char: "["),
-                popChar:  CharToken(char: "]")
-            )
-        )
-        machine.addStackSymbol(
-            record: StackRecord(
-                data: nil,
-                pushChar: CharToken(char: "("),
-                popChar:  CharToken(char: ")")
-            )
-        )
-        machine.addStackSymbol(
-            record: StackRecord(
-                data: nil,
-                pushChar: CharToken(char: "{"),
-                popChar:  CharToken(char: "}")
-            )
-        )
-        originState = initial
-        targetState = initial
+        machine.addStackSymbol(record: SquareStackRecord())
+        machine.addStackSymbol(record: BraceStackRecord())
+        machine.addStackSymbol(record: CurlyStackRecord())
+        linking = LinkingProperties()
         if regExString[regExString.startIndex] == "^" {
             let secondChar = regExString.index(regExString.startIndex, offsetBy: 1)
             regExString = regExString.substring(from: secondChar)
         } else {
             machine.matchBeginning = false
         }
-        _actions["["] = _initSquareOrAction
-        _actions["]"] = _finishSquareOrAction
-        _actions["*"] = _zeroOrMoreAction
-        _actions["+"] = _oneOrMoreAction
-        _actions["?"] = _optionalAction
-        _actions["{"] = _initRepetitionAction
-        _actions["}"] = _finishRepetitionAction
-        _actions[","] = _commaAction
-        
-        _resetTransitionCounts()
+        setAction("[") { [unowned self] in
+            self.commitPreviousTransactions()
+            machine.push(record: SquareStackRecord())
+            return .ReadOrBracket
+        }
+        setAction("]") {
+            _ = machine.pop()
+            return .Default
+        }
+        setAction("*") { [unowned self] in
+            self.transitioning = TransitionProperties(min: 0, max: Int.max)
+            return .CreateEpsilon
+        }
+        setAction("+") { [unowned self] in
+            self.transitioning = TransitionProperties(min: 1, max: Int.max)
+            return .CreateEpsilon
+        }
+        setAction("?") { [unowned self] in
+            self.transitioning = TransitionProperties(min: 0, max: 1)
+            return .CreateEpsilon
+        }
+        setAction("{") {.ReadFirstRepetitionValue}
+        setAction("}") {.ReadSecondRepetitionValue}
+        setAction(",") {.FinishingRepetition}
+        resetTransitionCounts()
     }
 }

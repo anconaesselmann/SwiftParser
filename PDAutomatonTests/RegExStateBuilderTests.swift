@@ -8,7 +8,7 @@ class RegExStateBuilderTests: XCTestCase {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     func testRegExStateBuilderEntireStringMatches() {
-        let reg     = RegExBuilder(regExString: "abcd")
+        let reg     = RegExBuilder(withPattern: "abcd")
         let tape    = StringTape(string: "abcd")
         let machine = NPDAutomaton(withTape: tape)
         let compiled = reg.compile(machine: machine)
@@ -20,7 +20,7 @@ class RegExStateBuilderTests: XCTestCase {
         XCTAssertEqual(machine.matchPos, 0)
     }
     func testRegExStateBuilder() {
-        let reg     = RegExBuilder(regExString: "abcd")
+        let reg     = RegExBuilder(withPattern: "abcd")
         let tape    = StringTape(string: "abcdefg")
         let machine = NPDAutomaton(withTape: tape)
         let compiled = reg.compile(machine: machine)
@@ -31,7 +31,7 @@ class RegExStateBuilderTests: XCTestCase {
         XCTAssertEqual(machine.matchPos, 0)
     }
     func testRegExStateBuilderRunTwice() {
-        let reg     = RegExBuilder(regExString: "abcd")
+        let reg     = RegExBuilder(withPattern: "abcd")
         let tape    = StringTape(string: "abcdabcd")
         let machine = NPDAutomaton(withTape: tape)
         let compiled = reg.compile(machine: machine)
@@ -47,7 +47,7 @@ class RegExStateBuilderTests: XCTestCase {
         XCTAssertEqual(machine.matchPos, 4)
     }
     func testRegExStateBuilder_resetWhenNotMatching() {
-        let reg     = RegExBuilder(regExString: "abcd")
+        let reg     = RegExBuilder(withPattern: "abcd")
         let tape    = StringTape(string: "abcefg")
         let machine = NPDAutomaton(withTape: tape)
         let compiled = reg.compile(machine: machine)
@@ -59,7 +59,7 @@ class RegExStateBuilderTests: XCTestCase {
     }
     
     func testRegExStateBuilderTapeNotAtBeginning_resetWhenNotMatching() {
-        let reg     = RegExBuilder(regExString: "abcd")
+        let reg     = RegExBuilder(withPattern: "abcd")
         let tape    = StringTape(string: "ababce")
         tape.position = 2
         let machine = NPDAutomaton(withTape: tape)
@@ -71,7 +71,7 @@ class RegExStateBuilderTests: XCTestCase {
         XCTAssertEqual(machine.matchPos, nil)
     }
     func testRegExStateBuilder_testOrWithExplicitCharacters() {
-        let reg     = RegExBuilder(regExString: "a[bc]d")
+        let reg     = RegExBuilder(withPattern: "a[bc]d")
         let tape    = StringTape(string: "abdefg")
         let machine = NPDAutomaton(withTape: tape)
         let compiled = reg.compile(machine: machine)
@@ -83,7 +83,7 @@ class RegExStateBuilderTests: XCTestCase {
     }
     
     func testRegExStateBuilder_testOrWithExplicitCharacters_failing() {
-        let reg     = RegExBuilder(regExString: "a[bc]d")
+        let reg     = RegExBuilder(withPattern: "a[bc]d")
         let tape    = StringTape(string: "addefg")
         let machine = NPDAutomaton(withTape: tape)
         let compiled = reg.compile(machine: machine)
