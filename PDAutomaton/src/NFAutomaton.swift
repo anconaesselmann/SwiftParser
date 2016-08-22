@@ -11,6 +11,10 @@ class NFAutomaton {
     var currentStates  = StateRecordList()
     var id:Int!
     
+    private var dontResetTape = false // TODO: This is hacky... Why does setting a property of a variable cause didSet to be called?
+    
+    private var lastPassingPos:Int?
+    
     init() {
         _setId()
         tape = nil
@@ -30,6 +34,13 @@ extension NFAutomaton:Automaton {
     func run() -> Bool {
         let result = matchBeginning ? _runMatchBeginning() : _runMatchLeftMost()
         _resetTape()
+        if result && tape.eof {
+            if (lastPassingPos! + 1) < tape.position {
+                dontResetTape = true // TODO: super hacky..
+                tape.position = lastPassingPos! + 1
+                dontResetTape = false
+            }
+        }
         return result
     }
     func step() -> Bool {
@@ -45,6 +56,7 @@ extension NFAutomaton:Automaton {
         }
     }
     func reset() {
+        guard dontResetTape == false else {return}
         _initCurrentStates()
         matchPos  = nil
         accepting = false
@@ -136,6 +148,7 @@ private extension NFAutomaton {
         if state.accepting {
             accepting = true
             _hadPassingState = true
+            lastPassingPos = tape.position
         }
     }
     func _makeEpsilonTransitions(forRecord record:StateRecord, notIn recordList: StateRecordList) {
