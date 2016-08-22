@@ -77,7 +77,7 @@ class FSMachine:Automaton {
         return false
     }
     private func _acceptTransition(transiton:Transition, token: AnyObject) -> Bool {
-        if transiton.trigger.accepts(input: token) {
+        if transiton.trigger.accepts(token) {
             currentState = transiton.targetState
             accepting    = currentState?.accepting ?? false
             return true
@@ -98,7 +98,7 @@ class FSMachine:Automaton {
 }
 
 extension FSMachine: Acceptable {
-    func accepts(input:AnyObject) -> Bool {
+    func accepts(_ input:AnyObject) -> Bool {
         let accepting = run()
         if accepting {
             if !tape.eof {

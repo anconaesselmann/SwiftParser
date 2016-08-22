@@ -8,7 +8,7 @@ class CharToken {
 }
 
 extension CharToken:Acceptable {
-    func accepts(input:AnyObject) -> Bool {
+    func accepts(_ input:AnyObject) -> Bool {
         switch input {
         case is CharToken:
             return (input as! CharToken).char == char
@@ -26,7 +26,7 @@ extension CharToken:Comparable {
     static func ==(left: CharToken, right: CharToken) -> Bool {
         return left.char == right.char
     }
-    static func <(left: CharToken, right: CharToken) -> Bool { return false }
+    static func <(left: CharToken, right: CharToken) -> Bool { return left.char < right.char }
 }
 
 extension CharToken:CustomStringConvertible {

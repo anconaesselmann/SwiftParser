@@ -2,15 +2,6 @@ import XCTest
 @testable import PDAutomaton
 
 class PDAutomatonTests: XCTestCase {
-    func testEqualityCharToken() {
-        let a1 = CharToken(char: "a")
-        let a2 = CharToken(char: "a")
-        let b  = CharToken(char: "b")
-        
-        XCTAssert(a1 == a1)
-        XCTAssert(a1 == a2)
-        XCTAssert(a1 != b)
-    }
     func testGetCharacterFromStringTape() {
         let input = "abcde"
         let tape = StringTape(string: input)
@@ -168,6 +159,6 @@ class PDAutomatonTests: XCTestCase {
         tape.string = "abcdefg"
         machineA.tape = tape
         XCTAssert(machineA.run())
-        XCTAssert(machineA.accepts(input: "abcefg"))
+        XCTAssert(machineA.accepts("abcefg"))
     }
 }

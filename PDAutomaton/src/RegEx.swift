@@ -55,7 +55,7 @@ class RegEx {
         return _match(subject: subject)
     }
     
-    // TODO: Instead of recompiling, combine the atomata instead to save compilation time. Then this can probably be moved to parent class too.
+    // TODO: Instead of recompiling, combine the atomata to save compilation time. Then this can probably be moved to parent class too.
     static func +=(lhs: RegEx, rhs: RegEx) {
         lhs.pattern = "\(lhs.pattern)\(rhs.pattern)"
     }

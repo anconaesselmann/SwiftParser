@@ -141,6 +141,6 @@ class NPDAutomatonTests: XCTestCase {
         tape.string = "abcdefg"
         machineA.tape = tape
         XCTAssert(machineA.run())
-        XCTAssert(machineA.accepts(input: "abcefg"))
+        XCTAssert(machineA.accepts("abcefg"))
     }
 }

@@ -120,7 +120,7 @@ private extension NFAutomaton {
         if let automaton = transition.trigger as? Automaton {
             automaton.reset()
         }
-        return transition.trigger.accepts(input: token)
+        return transition.trigger.accepts(token)
     }
     func _initCurrentStates() {
         guard states.count > 0 else { return }
@@ -165,7 +165,7 @@ private extension NFAutomaton {
 }
 
 extension NFAutomaton:Acceptable {
-    func accepts(input:AnyObject) -> Bool {
+    func accepts(_ input:AnyObject) -> Bool {
         if input is Automaton {
             print("Is atomaton")
         }
