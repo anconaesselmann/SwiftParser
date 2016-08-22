@@ -53,6 +53,12 @@ extension RegExBuilder {
                 builder.commitPreviousTransactions()
                 builder.state = .ReadEscapedChar
             }
+            builder.set(specialChar: DigitToken(),      forChar: "d")
+            builder.set(specialChar: LowerCaseToken(),  forChar: "l")
+            builder.set(specialChar: UpperCaseToken(),  forChar: "u")
+            builder.set(specialChar: WordToken(),       forChar: "w")
+            builder.set(specialChar: WhiteSpaceToken(), forChar: "s")
+//            builder.set(specialChar: HexToken(), forChar: "x")
         }
     }
 }

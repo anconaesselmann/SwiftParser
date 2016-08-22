@@ -36,9 +36,6 @@ extension NFAutomaton:Automaton {
         guard !tape.eof else {return false}
         accepting = false
         let token = tape.get()!
-        
-        let tempChar = (token as! CharToken).char
-        print(tempChar)
         if _makeNonDeterministicTransitions(forToken: token) {
             _makeEpsilonTransitions()
             tape.advance()

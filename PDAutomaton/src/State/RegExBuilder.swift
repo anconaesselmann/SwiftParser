@@ -16,8 +16,9 @@ class RegExBuilder {
     var transitioning = TransitionProperties()
     var state:RegExState = .Default
     var escapeChar:Character = "\\"
-    private var currentTriggers:[Acceptable]       = []
-    private var actions:[Character:ActionFunction] = [:]
+    private var currentTriggers:[Acceptable]        = []
+    private var actions:[Character:ActionFunction]  = [:]
+    private var specialChars:[Character:Acceptable] = [:]
     private let initializer = RegExBuilderInitializer()
     
     func commitPreviousTransactions() {
@@ -44,6 +45,9 @@ class RegExBuilder {
     func setAction(_ char: Character, action:()->Void) {
         actions[char] = action
     }
+    func set(specialChar:Acceptable, forChar char: Character) {
+        specialChars[char] = specialChar
+    }
 }
 extension RegExBuilder: StateBuilder {
     func compile(machine:Automaton) -> Bool {
@@ -52,7 +56,15 @@ extension RegExBuilder: StateBuilder {
         initializer.initialize(builder: self, machine: machine)
         for char in regExString.characters {
             if isSpecialSymbol(char: char) {
-                guard let actionFunction = actions[char] else {return false}
+                guard let actionFunction = actions[char] else {
+                    if let specialChar = specialChars[char] {
+                        commitPreviousTransactions()
+                        stageTransiton(token: specialChar)
+                        continue
+                    } else {
+                        return false
+                    }
+                }
                 actionFunction()
             } else {
                 commitPreviousTransactions()
@@ -94,6 +106,9 @@ private extension RegExBuilder {
         guard let newInt = Int("\(char)") else {return}
         transitioning.maxTransitionCount = transitioning.maxTransitionCount * 10 + newInt
     }
+    func stageTransiton(token:Acceptable) {
+        currentTriggers.append(token)
+    }
     func stageTransition(char:Character) {
         guard state != .ReadRepetitionValue else {
             updateTransitionCount(char)
@@ -107,6 +122,9 @@ private extension RegExBuilder {
     func isSpecialSymbol(char: Character) -> Bool {
         if state == .ReadEscapedChar {
             state = .Default
+            for (symbol, _) in specialChars {
+                if symbol == char {return true}
+            }
             return false // TODO: Deal with escaped escape characters
         }
         for (symbol, _) in actions {

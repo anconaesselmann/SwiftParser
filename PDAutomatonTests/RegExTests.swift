@@ -3,6 +3,7 @@ import XCTest
 
 class RegExTests: XCTestCase {
     var re:RegEx!
+    var match:Int?
     override func setUp() {
         super.setUp()
         re = RegEx()
@@ -292,5 +293,12 @@ class RegExTests: XCTestCase {
         match = re.match(subject: "a[12345]a")
         XCTAssertEqual(match, 1)
         XCTAssertEqual(re.matchLength, 7)
+    }
+    
+    func test_characterGroups() {
+        re.pattern = "\\s\\d*\\s"
+        match = re.match(subject: "testing 123 testing")
+        XCTAssertEqual(match, 7)
+        XCTAssertEqual(re.matchLength, 5)
     }
 }
