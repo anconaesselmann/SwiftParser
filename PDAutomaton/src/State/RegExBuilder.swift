@@ -11,7 +11,10 @@ class RegExBuilder {
     }
     var regExString:String = ""
     init(withPattern pattern:String) {regExString = pattern}
-    
+    init(withPattern pattern:String, andEscapeChar char:Character) {
+        escapeChar  = char
+        regExString = pattern
+    }
     var linking:LinkingProperties!
     var transitioning = TransitionProperties()
     var state:RegExState = .Default

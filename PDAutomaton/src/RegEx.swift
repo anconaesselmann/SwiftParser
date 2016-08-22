@@ -4,6 +4,7 @@ class RegEx {
     var tape:StringTape!
     var machine:NPDAutomaton!
     var regExBuilder:RegExBuilder!
+    var escapeChar:Character = "\\"
     var position:Int {
         get {
             return tape.position
@@ -37,7 +38,7 @@ class RegEx {
     private func _compile(pattern:String) -> Bool {
         tape         = StringTape()
         machine      = NPDAutomaton()
-        regExBuilder = RegExBuilder(withPattern: pattern)
+        regExBuilder = RegExBuilder(withPattern: pattern, andEscapeChar:escapeChar)
         machine.tape = tape
         return regExBuilder.compile(machine: machine)
     }

@@ -296,9 +296,16 @@ class RegExTests: XCTestCase {
     }
     
     func test_characterGroups() {
-        re.pattern = "\\s\\d*\\s"
-        match = re.match(subject: "testing 123 testing")
+        re.pattern = "\\(\\s\\d*\\s\\)"
+        match = re.match(subject: "testing( 123 )testing")
         XCTAssertEqual(match, 7)
-        XCTAssertEqual(re.matchLength, 5)
+        XCTAssertEqual(re.matchLength, 7)
+    }
+    func test_alternateEscapeChar() {
+        re.escapeChar = "/"
+        re.pattern = "/(/s/d*/s/)"
+        match = re.match(subject: "testing( 123 )testing")
+        XCTAssertEqual(match, 7)
+        XCTAssertEqual(re.matchLength, 7)
     }
 }
