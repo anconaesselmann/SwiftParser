@@ -308,4 +308,12 @@ class RegExTests: XCTestCase {
         XCTAssertEqual(match, 7)
         XCTAssertEqual(re.matchLength, 7)
     }
+    func test_phoneNumber() {
+        re.escapeChar = "/"
+        re.pattern = "/(/d{3}/)/s?/d{3}/s?-/s?/d{4}"
+        print(re.machine)
+        match = re.match(subject: "Phone: (626) 344-9785 some other stuff")
+        XCTAssertEqual(match, 7)
+        XCTAssertEqual(re.matchLength, 14)
+    }
 }
