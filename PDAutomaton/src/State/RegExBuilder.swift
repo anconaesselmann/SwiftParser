@@ -51,6 +51,16 @@ class RegExBuilder {
     func set(specialChar:Acceptable, forChar char: Character) {
         specialChars[char] = specialChar
     }
+    func stageTransiton(token:Acceptable) {
+        currentTriggers.append(token)
+    }
+    func stageTransition(char:Character) {
+        guard state != .ReadRepetitionValue else {
+            updateTransitionCount(char)
+            return
+        }
+        currentTriggers.append(CharToken(char: char))
+    }
 }
 extension RegExBuilder: StateBuilder {
     func compile(machine:Automaton) -> Bool {
@@ -109,16 +119,6 @@ private extension RegExBuilder {
         guard let newInt = Int("\(char)") else {return}
         transitioning.maxTransitionCount = transitioning.maxTransitionCount * 10 + newInt
     }
-    func stageTransiton(token:Acceptable) {
-        currentTriggers.append(token)
-    }
-    func stageTransition(char:Character) {
-        guard state != .ReadRepetitionValue else {
-            updateTransitionCount(char)
-            return
-        }
-        currentTriggers.append(CharToken(char: char))
-    }
     func setAcceptingStates() {
         linking.target.accepting = true
     }
@@ -129,6 +129,9 @@ private extension RegExBuilder {
                 if symbol == char {return true}
             }
             return false // TODO: Deal with escaped escape characters
+        } else if state == .MatchAnything {
+            state = .Default
+            return true
         }
         for (symbol, _) in actions {
             if symbol == char {return true}

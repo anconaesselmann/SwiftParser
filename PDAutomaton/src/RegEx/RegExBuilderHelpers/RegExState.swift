@@ -8,5 +8,6 @@ extension RegExBuilder {
         case ReadRepetitionValue
         case ReadEscapedChar
         case CreateNewState
+        case MatchAnything
     }
 }

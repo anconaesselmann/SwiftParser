@@ -53,6 +53,10 @@ extension RegExBuilder {
                 builder.commitPreviousTransactions()
                 builder.state = .ReadEscapedChar
             }
+            builder.setAction(".") {
+                builder.commitPreviousTransactions()
+                builder.stageTransiton(token: AnyToken())
+            }
             builder.set(specialChar: DigitToken(),      forChar: "d")
             builder.set(specialChar: LowerCaseToken(),  forChar: "l")
             builder.set(specialChar: UpperCaseToken(),  forChar: "u")

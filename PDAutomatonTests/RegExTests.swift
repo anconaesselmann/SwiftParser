@@ -316,4 +316,33 @@ class RegExTests: XCTestCase {
         XCTAssertEqual(match, 7)
         XCTAssertEqual(re.matchLength, 14)
     }
+    func test_dotOperator() {
+        re.pattern = "a.a"
+        print(re.machine)
+        
+        match = re.match(subject: "bacab")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 3)
+        
+        match = re.match(subject: "baccb")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+    }
+    
+    func test_repeatedDotOperator() {
+        re.pattern = "a.+a"
+        print(re.machine)
+        
+        match = re.match(subject: "baab")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+        
+        match = re.match(subject: "bacabb")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 3)
+        
+        match = re.match(subject: "bacdefgabb")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 7)
+    }
 }
