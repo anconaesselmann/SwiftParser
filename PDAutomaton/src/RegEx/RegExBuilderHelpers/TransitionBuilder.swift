@@ -2,9 +2,14 @@ import Foundation
 
 extension RegExBuilder {
     struct TransitionBuilder {
+        enum TransitionBuilderState {
+            case Default
+            case Finished
+        }
+        private var state = TransitionBuilderState.Default
         private var transProps = TransitionProperties()
-        var origin:State
-        var target:State
+        private var origin:State
+        private var target:State
         init(origin:State, target:State) {
             self.origin = origin
             self.target = target
@@ -40,6 +45,13 @@ extension RegExBuilder {
         mutating func markTargetAccepting() {
             target.accepting = true
         }
+        mutating func getFinalState() -> State {
+            markTargetAccepting()
+            return target
+        }
+        func getCurrentState() -> State {
+            return origin
+        }
         mutating func createEpsilon() {
             newTarget()
             let epsilonTransition = EpsilonTransition(
@@ -61,6 +73,7 @@ extension RegExBuilder {
         mutating func willTransitionOptionally() {
             willTransition(withMin: 0, andMax: 1)
         }
+        // This is awkward. Move logic to RegExBuilder
         mutating func swapMaxToMinTransitionTimes() {
             transProps.minTransitionCount = transProps.maxTransitionCount
            transProps.maxTransitionCount = 0

@@ -34,7 +34,7 @@
 		9751DC251D67D8EB00A760E1 /* RegExStateBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC241D67D8EB00A760E1 /* RegExStateBuilderTests.swift */; };
 		9751DC281D68E5C700A760E1 /* TransitionProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC271D68E5C700A760E1 /* TransitionProperties.swift */; };
 		9751DC2A1D68E64100A760E1 /* RegExState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC291D68E64100A760E1 /* RegExState.swift */; };
-		9751DC2C1D68E66100A760E1 /* LinkingProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC2B1D68E66100A760E1 /* LinkingProperties.swift */; };
+		9751DC2C1D68E66100A760E1 /* TransitionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC2B1D68E66100A760E1 /* TransitionBuilder.swift */; };
 		9751DC2E1D6A6B6600A760E1 /* RegExBuilderInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC2D1D6A6B6600A760E1 /* RegExBuilderInitializer.swift */; };
 		9751DC301D6A76BF00A760E1 /* CharRangeToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC2F1D6A76BF00A760E1 /* CharRangeToken.swift */; };
 		9751DC331D6A77E100A760E1 /* TokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC321D6A77E100A760E1 /* TokenTests.swift */; };
@@ -99,7 +99,7 @@
 		9751DC241D67D8EB00A760E1 /* RegExStateBuilderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegExStateBuilderTests.swift; path = PDAutomatonTests/RegExStateBuilderTests.swift; sourceTree = SOURCE_ROOT; };
 		9751DC271D68E5C700A760E1 /* TransitionProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransitionProperties.swift; path = RegEx/RegExBuilderHelpers/TransitionProperties.swift; sourceTree = "<group>"; };
 		9751DC291D68E64100A760E1 /* RegExState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegExState.swift; path = RegEx/RegExBuilderHelpers/RegExState.swift; sourceTree = "<group>"; };
-		9751DC2B1D68E66100A760E1 /* LinkingProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LinkingProperties.swift; path = RegEx/RegExBuilderHelpers/LinkingProperties.swift; sourceTree = "<group>"; };
+		9751DC2B1D68E66100A760E1 /* TransitionBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransitionBuilder.swift; path = RegEx/RegExBuilderHelpers/TransitionBuilder.swift; sourceTree = "<group>"; };
 		9751DC2D1D6A6B6600A760E1 /* RegExBuilderInitializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegExBuilderInitializer.swift; path = RegEx/RegExBuilderHelpers/RegExBuilderInitializer.swift; sourceTree = "<group>"; };
 		9751DC2F1D6A76BF00A760E1 /* CharRangeToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharRangeToken.swift; sourceTree = "<group>"; };
 		9751DC321D6A77E100A760E1 /* TokenTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TokenTests.swift; path = PDAutomatonTests/TokenTests.swift; sourceTree = SOURCE_ROOT; };
@@ -288,7 +288,7 @@
 			children = (
 				9751DC271D68E5C700A760E1 /* TransitionProperties.swift */,
 				9751DC291D68E64100A760E1 /* RegExState.swift */,
-				9751DC2B1D68E66100A760E1 /* LinkingProperties.swift */,
+				9751DC2B1D68E66100A760E1 /* TransitionBuilder.swift */,
 				9751DC2D1D6A6B6600A760E1 /* RegExBuilderInitializer.swift */,
 			);
 			name = RegExBuilderHelpers;
@@ -447,7 +447,7 @@
 				9722FC631D5C157B0025A91D /* FSMachine.swift in Sources */,
 				9733D74B1D64437A006E06DD /* NFAutomaton.swift in Sources */,
 				9722FC6B1D5C157B0025A91D /* Transition.swift in Sources */,
-				9751DC2C1D68E66100A760E1 /* LinkingProperties.swift in Sources */,
+				9751DC2C1D68E66100A760E1 /* TransitionBuilder.swift in Sources */,
 				9722FC2E1D5C153D0025A91D /* ViewController.swift in Sources */,
 				97DC15211D66820E001B32CB /* StateRecordList.swift in Sources */,
 				9751DC3C1D6A8A2000A760E1 /* CharExclusionToken.swift in Sources */,

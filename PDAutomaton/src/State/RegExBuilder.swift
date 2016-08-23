@@ -3,9 +3,9 @@ import Foundation
 class RegExBuilder {
     typealias ActionFunction = () -> Void
     
-    var machine:NPDAutomaton! {didSet {transitioner = TransitionBuilder()}}
+    var machine:NPDAutomaton! {didSet {transitionBuilder = TransitionBuilder()}}
     var regExString:String = ""
-    var transitioner:TransitionBuilder!
+    var transitionBuilder:TransitionBuilder!
 
     var state:RegExState = .Default
     var escapeChar:Character = "\\"
@@ -23,16 +23,15 @@ class RegExBuilder {
     
     func commitPreviousTransactions() {
         guard shouldCommitTransaction() else {return}
-        transitioner.setTarget(forState: state)
+        transitionBuilder.setTarget(forState: state)
         for trigger in currentTriggers {
-            transitioner.append(withTrigger: trigger)
+            transitionBuilder.append(withTrigger: trigger)
         }
         if state == .CreateEpsilon {
-            epsilonTransitionToNewState()
-        } else {
-            machine.append(state: transitioner.origin)
+            transitionBuilder.createEpsilon()
         }
-        transitioner.targetBecomesOrigin()
+        machine.append(state: transitionBuilder.getCurrentState())
+        transitionBuilder.targetBecomesOrigin()
         currentTriggers = []
     }
     func setAction(_ char: Character, action:()->Void) {
@@ -46,7 +45,7 @@ class RegExBuilder {
     }
     func stageTransition(forChar char:Character) {
         guard state != .ReadRepetitionValue else {
-            _ = transitioner.appendTransitionMaxCount(withChar: char)
+            _ = transitionBuilder.appendTransitionMaxCount(withChar: char)
             return
         }
         currentTriggers.append(CharToken(char: char))
@@ -69,8 +68,7 @@ extension RegExBuilder: StateBuilder {
     }
     func finishCompilation() {
         commitPreviousTransactions()
-        transitioner.markTargetAccepting()
-        machine.append(state: transitioner.target)
+        machine.append(state: transitionBuilder.getFinalState())
     }
 }
 private extension RegExBuilder {
@@ -116,10 +114,6 @@ private extension RegExBuilder {
     }
     func shouldCommitTransaction() -> Bool {
         return state.shouldCommit && currentTriggers.count > 0
-    }
-    func epsilonTransitionToNewState() {
-        transitioner.createEpsilon()
-        machine.append(state: transitioner.origin)
     }
     func isSpecialSymbol(_ char: Character) -> Bool {
         if state == .ReadEscapedChar {
