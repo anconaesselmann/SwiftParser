@@ -26,6 +26,10 @@ Be prepared to terminate the process.
 
 Try the above regular expression on the same string with a regular expression engine that uses automaton theory and it will report non-match in seconds.
 
+Why might you care? Especially since this is a contrived example? Well, [ReDoS](https://www.owasp.org/index.php/Regular_expression_Denial_of_Service_-_ReDoS) is a denial of service attack using regular expressions that will result in catastrophic backtracking. If there is any way that a user might be able to execute a custom regular expression on your server, you have to worry about this. But even without malicious intent, sometimes innocent looking regular expressions can result in catastrophic backtracking
+
+# Disclaimer
+Please be advised, I have done only a limited amount of testing on this project (see test files). There are probably bugs. I created this as an exercise to better understand how nondeterministic automatons work and I have not used it in production code. If you find any bug, please let me know!
 
 # Other regular expression engines built with automaton theory:
 - [Re2](https://github.com/google/re2) (C++ with wrappers for Python and others. Built by google)
