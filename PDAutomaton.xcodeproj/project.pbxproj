@@ -253,7 +253,6 @@
 				9733D75A1D66619F006E06DD /* TransitionProtocol.swift */,
 				9733D74E1D665327006E06DD /* NTransition.swift */,
 				9733D7581D66617E006E06DD /* EpsilonTransition.swift */,
-				9733D7531D66581A006E06DD /* Counter.swift */,
 				9733D7571D6659B1006E06DD /* NFATests */,
 			);
 			name = NFA;
@@ -325,6 +324,7 @@
 		97DC151F1D6681E0001B32CB /* supporting */ = {
 			isa = PBXGroup;
 			children = (
+				9733D7531D66581A006E06DD /* Counter.swift */,
 				97DC15201D66820E001B32CB /* StateRecordList.swift */,
 				97DC15231D668319001B32CB /* StateRecord.swift */,
 				9751DC341D6A78E100A760E1 /* Extensions.swift */,

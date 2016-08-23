@@ -5,6 +5,10 @@ struct StateRecord {
         self.state = state
         counter = Counter()
     }
+    init(state:State, withCount count:Int) {
+        self.state = state
+        counter = Counter(withCount: count)
+    }
     var state:State
     var counter:Counter
 }
