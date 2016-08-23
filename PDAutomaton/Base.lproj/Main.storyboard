@@ -756,6 +756,28 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9gk-sa-0N9">
+                                <rect key="frame" x="-1" y="69" width="180" height="18"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="radio" title="Use NSRegularExpression" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="zaY-Wy-bhs">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="selectRegexAction:" target="XfG-lQ-9wD" id="SvA-9D-A3U"/>
+                                </connections>
+                            </button>
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fXe-zI-aUY">
+                                <rect key="frame" x="-1" y="47" width="259" height="18"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="radio" title="Use Nondeterministic Finite Automaton" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="PsY-wb-we0">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="selectRegexAction:" target="XfG-lQ-9wD" id="OMv-A4-J5p"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="aMV-qA-B6F" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="1Xd-XK-Zu9"/>
@@ -778,6 +800,9 @@
                     <connections>
                         <outlet property="matchLabel" destination="cQ1-82-U9v" id="eEu-jA-Yxk"/>
                         <outlet property="matchStatus" destination="tVs-Ku-LDN" id="u2d-z4-dxY"/>
+                        <outlet property="nfaButton" destination="fXe-zI-aUY" id="4Lu-EQ-IZi"/>
+                        <outlet property="nsRegExButton" destination="9gk-sa-0N9" id="5En-4r-Yme"/>
+                        <outlet property="regExChooser" destination="fXe-zI-aUY" id="OJ7-Lp-DCv"/>
                         <outlet property="regExPattern" destination="R67-Sv-rGi" id="qbi-BF-AcQ"/>
                         <outlet property="result" destination="aMV-qA-B6F" id="H2X-rI-RJY"/>
                         <outlet property="textArea" destination="7H6-Ld-jXa" id="RSW-82-g0L"/>
