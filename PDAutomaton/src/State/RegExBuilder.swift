@@ -32,12 +32,9 @@ class RegExBuilder {
         guard shouldCommitTransaction() else {return}
         linking.setTarget(forState: state)
         for trigger in currentTriggers {
-            linking.appendToOrigin(
-                transition: NTransition(
-                    targetState: linking.target,
-                    trigger:     trigger,
-                    withMax:     transitioning.maxTransitionCount
-                )
+            linking.append(
+                withTrigger: trigger,
+                andMaxTransitionCount: transitioning.maxTransitionCount
             )
         }
         if state == .CreateEpsilon {
@@ -84,7 +81,6 @@ extension RegExBuilder: StateBuilder {
         commitPreviousTransactions()
         linking.markTargetAccepting()
         machine.append(state: linking.target)
-        machine.reset()
     }
 }
 private extension RegExBuilder {
@@ -132,12 +128,7 @@ private extension RegExBuilder {
         return state.shouldCommit && currentTriggers.count > 0
     }
     func epsilonTransitionToNewState() {
-        linking.newTarget()
-        let epsilonTransition = EpsilonTransition(
-            targetState: linking.target,
-            withMin:     transitioning.minTransitionCount
-        )
-        linking.appendToOrigin(transition: epsilonTransition)
+        linking.epsilon(withMinTransitionCount: transitioning.minTransitionCount)
         machine.append(state: linking.origin)
         transitioning = TransitionProperties()
     }

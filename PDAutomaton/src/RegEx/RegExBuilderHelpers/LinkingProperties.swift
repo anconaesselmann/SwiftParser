@@ -24,11 +24,25 @@ extension RegExBuilder {
         mutating func setTarget(forState state:RegExState) {
             if state == .Default {newTarget()}
         }
-        mutating func appendToOrigin(transition:TransitionProtocol) {
-            origin.append(transition: transition)
+        mutating func append(withTrigger trigger:Acceptable, andMaxTransitionCount count:Int) {
+            origin.append(
+                transition: NTransition(
+                    targetState: target,
+                    trigger:     trigger,
+                    withMax:     count
+                )
+            )
         }
         mutating func markTargetAccepting() {
             target.accepting = true
+        }
+        mutating func epsilon(withMinTransitionCount count:Int) {
+            newTarget()
+            let epsilonTransition = EpsilonTransition(
+                targetState: target,
+                withMin: count
+            )
+            origin.append(transition: epsilonTransition)
         }
     }
 }
