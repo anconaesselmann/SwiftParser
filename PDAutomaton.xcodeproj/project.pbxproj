@@ -32,6 +32,7 @@
 		9733D7591D66617E006E06DD /* EpsilonTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9733D7581D66617E006E06DD /* EpsilonTransition.swift */; };
 		9733D75B1D66619F006E06DD /* TransitionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9733D75A1D66619F006E06DD /* TransitionProtocol.swift */; };
 		973C77D31D6CC5F800BBC622 /* NumberAppender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973C77D21D6CC5F800BBC622 /* NumberAppender.swift */; };
+		973C77D51D6CDEF500BBC622 /* NonWordToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973C77D41D6CDEF400BBC622 /* NonWordToken.swift */; };
 		9751DC251D67D8EB00A760E1 /* RegExStateBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC241D67D8EB00A760E1 /* RegExStateBuilderTests.swift */; };
 		9751DC281D68E5C700A760E1 /* TransitionProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC271D68E5C700A760E1 /* TransitionProperties.swift */; };
 		9751DC2A1D68E64100A760E1 /* RegExState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9751DC291D68E64100A760E1 /* RegExState.swift */; };
@@ -98,6 +99,7 @@
 		9733D7581D66617E006E06DD /* EpsilonTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EpsilonTransition.swift; path = State/EpsilonTransition.swift; sourceTree = "<group>"; };
 		9733D75A1D66619F006E06DD /* TransitionProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransitionProtocol.swift; path = State/TransitionProtocol.swift; sourceTree = "<group>"; };
 		973C77D21D6CC5F800BBC622 /* NumberAppender.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NumberAppender.swift; path = supporting/NumberAppender.swift; sourceTree = "<group>"; };
+		973C77D41D6CDEF400BBC622 /* NonWordToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NonWordToken.swift; path = Groups/NonWordToken.swift; sourceTree = "<group>"; };
 		9751DC241D67D8EB00A760E1 /* RegExStateBuilderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegExStateBuilderTests.swift; path = PDAutomatonTests/RegExStateBuilderTests.swift; sourceTree = SOURCE_ROOT; };
 		9751DC271D68E5C700A760E1 /* TransitionProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransitionProperties.swift; path = RegEx/RegExBuilderHelpers/TransitionProperties.swift; sourceTree = "<group>"; };
 		9751DC291D68E64100A760E1 /* RegExState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegExState.swift; path = RegEx/RegExBuilderHelpers/RegExState.swift; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 				9751DC3F1D6A8A5500A760E1 /* VerticalWhiteSpaceToken.swift */,
 				9751DC451D6A8A9100A760E1 /* HexToken.swift */,
 				9751DC491D6AB8A200A760E1 /* AnyToken.swift */,
+				973C77D41D6CDEF400BBC622 /* NonWordToken.swift */,
 			);
 			name = Groups;
 			sourceTree = "<group>";
@@ -433,6 +436,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9751DC281D68E5C700A760E1 /* TransitionProperties.swift in Sources */,
+				973C77D51D6CDEF500BBC622 /* NonWordToken.swift in Sources */,
 				9733D7541D66581A006E06DD /* Counter.swift in Sources */,
 				976A37231D628516004283F3 /* RegEx.swift in Sources */,
 				9751DC481D6A8AEA00A760E1 /* WordToken.swift in Sources */,

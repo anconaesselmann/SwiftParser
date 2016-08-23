@@ -1,5 +1,6 @@
 import Foundation
 
+// TODO: Decouple from StringTape, Character... and move generic nfa builder class
 class RegExBuilder {
     typealias ActionFunction = () -> Void
     

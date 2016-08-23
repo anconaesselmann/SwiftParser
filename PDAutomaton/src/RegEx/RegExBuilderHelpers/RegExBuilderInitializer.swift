@@ -81,6 +81,7 @@ extension RegExBuilder {
             builder.set(specialChar: LowerCaseToken(),  forChar: "l")
             builder.set(specialChar: UpperCaseToken(),  forChar: "u")
             builder.set(specialChar: WordToken(),       forChar: "w")
+            builder.set(specialChar: NonWordToken(),    forChar: "W")
             builder.set(specialChar: WhiteSpaceToken(), forChar: "s")
 //            builder.set(specialChar: HexToken(), forChar: "x")
         }
