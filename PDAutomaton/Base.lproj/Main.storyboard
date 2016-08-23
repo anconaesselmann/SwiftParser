@@ -682,11 +682,11 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="PDAutomaton" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="308"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="344"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="R67-Sv-rGi">
-                                <rect key="frame" x="0.0" y="90" width="480" height="22"/>
+                                <rect key="frame" x="0.0" y="126" width="480" height="22"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="\(\d{3}\)\s?\d{3}\s?-\s?\d{4}" drawsBackground="YES" id="PMF-Yb-o2w">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -694,7 +694,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aMV-qA-B6F">
-                                <rect key="frame" x="0.0" y="58" width="480" height="22"/>
+                                <rect key="frame" x="0.0" y="94" width="480" height="22"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="ZVB-6x-yXe">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -702,7 +702,7 @@
                                 </textFieldCell>
                             </textField>
                             <scrollView horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7H6-Ld-jXa">
-                                <rect key="frame" x="0.0" y="120" width="480" height="188"/>
+                                <rect key="frame" x="0.0" y="156" width="480" height="188"/>
                                 <clipView key="contentView" id="YZ1-vz-vAZ">
                                     <rect key="frame" x="1" y="1" width="478" height="186"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -731,7 +731,7 @@
                                 </scroller>
                             </scrollView>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3QH-Db-44S">
-                                <rect key="frame" x="403" y="22" width="83" height="32"/>
+                                <rect key="frame" x="403" y="58" width="83" height="32"/>
                                 <buttonCell key="cell" type="push" title="Search" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Rdy-IC-ocg">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -740,14 +740,34 @@
                                     <action selector="search:" target="XfG-lQ-9wD" id="7dM-w2-mFf"/>
                                 </connections>
                             </button>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cQ1-82-U9v">
+                                <rect key="frame" x="445" y="40" width="37" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="qhm-sY-sfD">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tVs-Ku-LDN">
+                                <rect key="frame" x="366" y="67" width="37" height="17"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="4TF-Xq-ZlA">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                         <constraints>
                             <constraint firstItem="aMV-qA-B6F" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="1Xd-XK-Zu9"/>
+                            <constraint firstItem="tVs-Ku-LDN" firstAttribute="top" secondItem="aMV-qA-B6F" secondAttribute="bottom" constant="10" id="6FM-sp-kYb"/>
                             <constraint firstItem="3QH-Db-44S" firstAttribute="top" secondItem="aMV-qA-B6F" secondAttribute="bottom" constant="8" symbolic="YES" id="9u9-ha-QcQ"/>
+                            <constraint firstAttribute="trailing" secondItem="cQ1-82-U9v" secondAttribute="trailing" id="GbX-NG-8eN"/>
                             <constraint firstAttribute="trailing" secondItem="R67-Sv-rGi" secondAttribute="trailing" id="HFx-DS-9nN"/>
                             <constraint firstItem="7H6-Ld-jXa" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="IfZ-nA-dwx"/>
                             <constraint firstItem="aMV-qA-B6F" firstAttribute="top" secondItem="R67-Sv-rGi" secondAttribute="bottom" constant="10" symbolic="YES" id="JeQ-0r-uHC"/>
+                            <constraint firstItem="cQ1-82-U9v" firstAttribute="top" secondItem="3QH-Db-44S" secondAttribute="bottom" constant="8" symbolic="YES" id="Kjp-to-7SH"/>
                             <constraint firstAttribute="trailing" secondItem="7H6-Ld-jXa" secondAttribute="trailing" id="MGM-I7-wvE"/>
+                            <constraint firstItem="3QH-Db-44S" firstAttribute="leading" secondItem="tVs-Ku-LDN" secondAttribute="trailing" constant="8" id="iPg-Yc-Wzx"/>
                             <constraint firstAttribute="trailing" secondItem="aMV-qA-B6F" secondAttribute="trailing" id="puv-g5-H4s"/>
                             <constraint firstItem="7H6-Ld-jXa" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="sIy-wL-aPQ"/>
                             <constraint firstItem="R67-Sv-rGi" firstAttribute="top" secondItem="7H6-Ld-jXa" secondAttribute="bottom" constant="8" symbolic="YES" id="veC-Su-YYG"/>
@@ -756,6 +776,8 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="matchLabel" destination="cQ1-82-U9v" id="eEu-jA-Yxk"/>
+                        <outlet property="matchStatus" destination="tVs-Ku-LDN" id="u2d-z4-dxY"/>
                         <outlet property="regExPattern" destination="R67-Sv-rGi" id="qbi-BF-AcQ"/>
                         <outlet property="result" destination="aMV-qA-B6F" id="H2X-rI-RJY"/>
                         <outlet property="textArea" destination="7H6-Ld-jXa" id="RSW-82-g0L"/>
@@ -764,7 +786,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="674"/>
+            <point key="canvasLocation" x="75" y="692"/>
         </scene>
     </scenes>
 </document>
