@@ -7,7 +7,7 @@ extension RegExBuilder {
             machine.addStackSymbol(record: SquareStackRecord())
             machine.addStackSymbol(record: BraceStackRecord())
             machine.addStackSymbol(record: CurlyStackRecord())
-            if builder.regExString[builder.regExString.startIndex] == "^" {
+            if builder.regExString.characters.count > 1 &&  builder.regExString[builder.regExString.startIndex] == "^" {
                 let secondChar = builder.regExString.index(builder.regExString.startIndex, offsetBy: 1)
                 builder.regExString = builder.regExString.substring(from: secondChar)
             } else {
@@ -56,6 +56,24 @@ extension RegExBuilder {
             builder.setAction(".") {
                 builder.commitPreviousTransactions()
                 builder.stageTransiton(token: AnyToken())
+            }
+            builder.setAction("(") {
+                builder.commitPreviousTransactions()
+                builder.state = .AtomicGroupStart
+                builder.atomicGroupCreator = RegExBuilder(withPattern: "", andEscapeChar: builder.escapeChar)
+                let machine = NPDAutomaton()
+                machine.tape = builder.machine.tape
+                guard builder.atomicGroupCreator!.compileSetup(machine: machine) else {
+                    // TODO: set error state
+                    print("error")
+                    return
+                }
+                builder.state = .AtomicGroupPassThrough
+            }
+            builder.setAction(")") {
+                builder.state = .Default
+                builder.compileFinish()
+                builder.state = .AtomicGroupFinished
             }
             builder.set(specialChar: DigitToken(),      forChar: "d")
             builder.set(specialChar: LowerCaseToken(),  forChar: "l")

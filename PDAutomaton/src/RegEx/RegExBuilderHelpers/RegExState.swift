@@ -9,5 +9,8 @@ extension RegExBuilder {
         case ReadEscapedChar
         case CreateNewState
         case MatchAnything
+        case AtomicGroupStart
+        case AtomicGroupPassThrough
+        case AtomicGroupFinished
     }
 }

@@ -24,6 +24,8 @@ class RegExBuilder {
     private var specialChars:[Character:Acceptable] = [:]
     private let initializer = RegExBuilderInitializer()
     
+    var atomicGroupCreator:RegExBuilder?
+    
     func commitPreviousTransactions() {
         guard shouldCommitTransaction() else {return}
         setTargetState()
@@ -64,40 +66,70 @@ class RegExBuilder {
 }
 extension RegExBuilder: StateBuilder {
     func compile(machine:Automaton) -> Bool {
+        guard compileSetup(machine: machine) else {return false}
+        for char in regExString.characters {
+            guard processChar(char: char) else {return false}
+        }
+        compileFinish()
+        return true
+    }
+    
+    
+    func compileSetup(machine:Automaton) -> Bool {
         guard let machine = machine as? NPDAutomaton else {return false}
         self.machine = machine
         initializer.initialize(builder: self, machine: machine)
-        for char in regExString.characters {
-            if isSpecialSymbol(char: char) {
-                guard let actionFunction = actions[char] else {
-                    if let specialChar = specialChars[char] {
-                        commitPreviousTransactions()
-                        stageTransiton(token: specialChar)
-                        continue
-                    } else {
-                        return false
-                    }
-                }
-                actionFunction()
-            } else {
-                commitPreviousTransactions()
-                stageTransition(char: char)
-            }
-        }
+        return true
+    }
+    func compileFinish() {
         commitPreviousTransactions()
         setAcceptingStates()
         machine.append(state: linking.target)
         machine.reset()
-        return true
     }
 }
 private extension RegExBuilder {
+    func processAtomicGropuPassThrough(char:Character) -> Bool {
+        if state == .AtomicGroupPassThrough {
+            if atomicGroupCreator!.processChar(char: char) {
+                if atomicGroupCreator!.state == .AtomicGroupFinished {
+                    stageTransiton(token: atomicGroupCreator!.machine)
+                    atomicGroupCreator = nil
+                    state = .Default
+                }
+                return true
+            } else {
+                // TODO: Is this an error state?
+                return false
+            }
+        }
+        if state == .AtomicGroupFinished {return true}
+        return false
+    }
+    func processChar(char: Character) -> Bool {
+        guard !processAtomicGropuPassThrough(char: char) else {return true}
+        if isSpecialSymbol(char: char) {
+            guard let actionFunction = actions[char] else {
+                guard let specialChar = specialChars[char] else {return false}
+                commitPreviousTransactions()
+                stageTransiton(token: specialChar)
+                return true
+            }
+            actionFunction()
+        } else {
+            print(char)
+            commitPreviousTransactions()
+            stageTransition(char: char)
+        }
+        return true
+    }
+    
     func shouldCommitTransaction() -> Bool {
         // TODO: Split state into two, one governing committing, one governing other behaviour
-        guard state != .ReadOrBracket else {return false}
+        guard state != .ReadOrBracket       else {return false}
         guard state != .ReadRepetitionValue else {return false}
-        guard state != .ReadEscapedChar else {return false}
-        guard currentTriggers.count > 0 else {return false}
+        guard state != .ReadEscapedChar     else {return false}
+        guard currentTriggers.count > 0     else {return false}
         return true
     }
     func setTargetState() {

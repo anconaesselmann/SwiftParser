@@ -328,7 +328,6 @@ class RegExTests: XCTestCase {
         XCTAssertEqual(match, nil)
         XCTAssertEqual(re.matchLength, 0)
     }
-    
     func test_repeatedDotOperator() {
         re.pattern = "a.+a"
         print(re.machine)
@@ -345,4 +344,58 @@ class RegExTests: XCTestCase {
         XCTAssertEqual(match, 1)
         XCTAssertEqual(re.matchLength, 7)
     }
+    func test_atomicGroups() {
+        re.pattern = "a(bcc)d"
+        print(re.machine)
+        
+        match = re.match(subject: "xabccdx")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 5)
+        match = re.match(subject: "xabcdx")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+    }
+    func test_atomicGroupsRepeatedZeroOrMore() {
+        re.pattern = "a(bcc)*d"
+        print(re.machine)
+        
+        match = re.match(subject: "xadx")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 2)
+        
+        match = re.match(subject: "xabccdx")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 5)
+        
+        match = re.match(subject: "xabccbccdx")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 8)
+        
+        match = re.match(subject: "xabccbcdx")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+    }
+    
+    
+    func test_atomicGroupsRepeatedOneOrMore() {
+        re.pattern = "a(bcc)+d"
+        print(re.machine)
+        
+        match = re.match(subject: "xadx")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+        
+        match = re.match(subject: "xabccdx")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 5)
+        
+        match = re.match(subject: "xabccbccdx")
+        XCTAssertEqual(match, 1)
+        XCTAssertEqual(re.matchLength, 8)
+        
+        match = re.match(subject: "xabccbcdx")
+        XCTAssertEqual(match, nil)
+        XCTAssertEqual(re.matchLength, 0)
+    }
+    
 }
