@@ -30,9 +30,9 @@ class RegExBuilder {
     
     func commitPreviousTransactions() {
         guard shouldCommitTransaction() else {return}
-        setTargetState()
+        linking.setTarget(forState: state)
         for trigger in currentTriggers {
-            linking.origin.append(
+            linking.appendToOrigin(
                 transition: NTransition(
                     targetState: linking.target,
                     trigger:     trigger,
@@ -40,11 +40,10 @@ class RegExBuilder {
                 )
             )
         }
-        if !linking.statesAreEqual() {
-            machine.append(state: linking.origin)
-        }
         if state == .CreateEpsilon {
             epsilonTransitionToNewState()
+        } else {
+            machine.append(state: linking.origin)
         }
         linking.targetBecomesOrigin()
         currentTriggers = []
@@ -72,7 +71,7 @@ extension RegExBuilder: StateBuilder {
         for char in regExString.characters {
             guard process(char: char) else {return false}
         }
-        compileFinish()
+        finishCompilation()
         return true
     }
     func compileSetup(machine:Automaton) -> Bool {
@@ -81,9 +80,9 @@ extension RegExBuilder: StateBuilder {
         initializer.initialize(builder: self, machine: machine)
         return true
     }
-    func compileFinish() {
+    func finishCompilation() {
         commitPreviousTransactions()
-        setAcceptingStates()
+        linking.markTargetAccepting()
         machine.append(state: linking.target)
         machine.reset()
     }
@@ -130,14 +129,7 @@ private extension RegExBuilder {
         return true
     }
     func shouldCommitTransaction() -> Bool {
-        guard state.shouldCommit else {return false}
-        guard currentTriggers.count > 0 else {return false}
-        return true
-    }
-    func setTargetState() {
-        if state == .Default {
-            linking.newTarget()
-        }
+        return state.shouldCommit && currentTriggers.count > 0
     }
     func epsilonTransitionToNewState() {
         linking.newTarget()
@@ -145,12 +137,9 @@ private extension RegExBuilder {
             targetState: linking.target,
             withMin:     transitioning.minTransitionCount
         )
-        linking.origin.append(transition: epsilonTransition)
+        linking.appendToOrigin(transition: epsilonTransition)
         machine.append(state: linking.origin)
         transitioning = TransitionProperties()
-    }
-    func setAcceptingStates() {
-        linking.target.accepting = true
     }
     func isSpecialSymbol(_ char: Character) -> Bool {
         if state == .ReadEscapedChar {

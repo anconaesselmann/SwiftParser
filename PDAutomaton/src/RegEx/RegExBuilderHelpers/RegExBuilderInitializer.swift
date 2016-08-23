@@ -72,7 +72,7 @@ extension RegExBuilder {
             }
             builder.setAction(")") {
                 builder.state = .Default
-                builder.compileFinish()
+                builder.finishCompilation()
                 builder.state = .AtomicGroupFinished
             }
             builder.set(specialChar: DigitToken(),      forChar: "d")

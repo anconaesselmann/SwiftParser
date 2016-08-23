@@ -21,5 +21,14 @@ extension RegExBuilder {
         mutating func newTarget() {
             target = State()
         }
+        mutating func setTarget(forState state:RegExState) {
+            if state == .Default {newTarget()}
+        }
+        mutating func appendToOrigin(transition:TransitionProtocol) {
+            origin.append(transition: transition)
+        }
+        mutating func markTargetAccepting() {
+            target.accepting = true
+        }
     }
 }
