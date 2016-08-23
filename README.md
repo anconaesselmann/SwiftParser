@@ -14,11 +14,13 @@
 
 # Why you might want to use my regular expression engine:
 
-- Regular expressions like this (a+a+)+b will result in exponential time complexity due to backtracking when it doesn't find a matching (in this case called catastrophic backtracking). A regular expression engine built with automaton theory on the other hand has superlinear time complexity.
+Regular expressions like this `(a+a+)+b` will result in exponential time complexity due to backtracking when it doesn't find a matching (in this case called catastrophic backtracking). A regular expression engine built with automaton theory on the other hand has superlinear time complexity.
 
 Try the above regular expression on a string of a few 'a' characters to test if your regular expression engine is prone to catastrophic backtracking:
 
+```
 aaaaaaaaaaaaaaaaaaaaaa
+```
 
 Be prepared to terminate the process.
 
@@ -26,4 +28,4 @@ Try the above regular expression on the same string with a regular expression en
 
 
 # Other regular expression engines built with automaton theory:
-- Re2(https://github.com/google/re2) (C++ with wrappers for Python and others. Built by google)
+- [Re2](https://github.com/google/re2) (C++ with wrappers for Python and others. Built by google)
