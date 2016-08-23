@@ -19,7 +19,7 @@ Regular expressions like this `(a+a+)+b` will result in exponential time complex
 Try the above regular expression on a string of a few 'a' characters to test if your regular expression engine is prone to catastrophic backtracking:
 
 ```
-aaaaaaaaaaaaaaaaaaaaaa
+aaaaaaaaaaaaaaaaaaaaaaaaaaaa
 ```
 
 Be prepared to terminate the process.
