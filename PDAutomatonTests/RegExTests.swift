@@ -255,6 +255,7 @@ class RegExTests: XCTestCase {
     func test_range() {
         re.pattern = "ab{2,4}c"
         var match:Int?
+        print(re.machine)
         match = re.match(subject: "cabcd")
         XCTAssertEqual(match, nil)
         XCTAssertEqual(re.matchLength, 0)

@@ -14,6 +14,7 @@ class RegExBuilder {
     private var specialChars:[Character:Acceptable] = [:]
     private let initializer = RegExBuilderInitializer()
     var atomicGroupCreator:RegExBuilder?
+    private var tempNumber:NumberAppender?
     
     init(withPattern pattern:String) {regExString = pattern}
     init(withPattern pattern:String, andEscapeChar char:Character) {
@@ -44,11 +45,17 @@ class RegExBuilder {
         currentTriggers.append(token)
     }
     func stageTransition(forChar char:Character) {
-        guard state != .ReadRepetitionValue else {
-            _ = transitionBuilder.appendTransitionMaxCount(withChar: char)
+        guard state != .ReadRangeValue else {
+            _ = tempNumber!.append(withChar: char)
             return
         }
         currentTriggers.append(CharToken(char: char))
+    }
+    func initTempNumber() {
+        tempNumber = NumberAppender()
+    }
+    func getTempNumber() -> Int {
+        return tempNumber!.getInteger()
     }
 }
 extension RegExBuilder: StateBuilder {

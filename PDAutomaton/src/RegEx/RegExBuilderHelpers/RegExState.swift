@@ -5,7 +5,7 @@ extension RegExBuilder {
         case Default
         case CreateEpsilon
         case ReadOrBracket
-        case ReadRepetitionValue
+        case ReadRangeValue
         case ReadEscapedChar
         case CreateNewState
         case MatchAnything
@@ -14,7 +14,7 @@ extension RegExBuilder {
         case AtomicGroupFinished
         var shouldCommit:Bool {
             switch self {
-            case .ReadOrBracket, .ReadRepetitionValue, .ReadEscapedChar: return false
+            case .ReadOrBracket, .ReadRangeValue, .ReadEscapedChar: return false
             default: return true
             }
         }

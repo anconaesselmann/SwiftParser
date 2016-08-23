@@ -35,16 +35,22 @@ extension RegExBuilder {
                 builder.state = .CreateEpsilon
             }
             builder.setAction("{") {
-                builder.transitionBuilder.willTransition(withMin: 0, andMax: 0)
-                builder.state = .ReadRepetitionValue
+                builder.transitionBuilder.willTransitionWithRange()
+                builder.initTempNumber()
+                builder.state = .ReadRangeValue
             }
             builder.setAction(",") {
-                builder.transitionBuilder.swapMaxToMinTransitionTimes()
-                builder.state = .ReadRepetitionValue
+                if builder.state == .ReadRangeValue {
+                    builder.transitionBuilder.setLimitsSequentiallyMaxThenMin(builder.getTempNumber())
+                    builder.initTempNumber()
+                }
             }
             builder.setAction("}") {
-                builder.transitionBuilder.setExactTransitionTimes()
-                builder.state = .CreateEpsilon
+                if builder.state == .ReadRangeValue {
+                    builder.transitionBuilder.setLimitsSequentiallyMaxThenMin(builder.getTempNumber())
+                    _ = builder.transitionBuilder.complementMissingExplicitLimit()
+                    builder.state = .CreateEpsilon
+                }
             }
             builder.setAction(builder.escapeChar) {
                 builder.commitPreviousTransactions()
@@ -61,8 +67,7 @@ extension RegExBuilder {
                 let machine = NPDAutomaton()
                 machine.tape = builder.machine.tape
                 guard builder.atomicGroupCreator!.compileSetup(machine: machine) else {
-                    // TODO: set error state
-                    print("error")
+                    print("error") // TODO: set error state
                     return
                 }
                 builder.state = .AtomicGroupPassThrough
