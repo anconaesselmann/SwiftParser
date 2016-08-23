@@ -23,30 +23,27 @@ extension RegExBuilder {
                 builder.state = .Default
             }
             builder.setAction("*") {
-                builder.transitioning = TransitionProperties(min: 0, max: Int.max)
+                builder.transitioner.willTransitionZeroOrMoreTimes()
                 builder.state = .CreateEpsilon
             }
             builder.setAction("+") {
-                builder.transitioning = TransitionProperties(min: 1, max: Int.max)
+                builder.transitioner.willTransitionOneOrMoreTimes()
                 builder.state = .CreateEpsilon
             }
             builder.setAction("?") {
-                builder.transitioning = TransitionProperties(min: 0, max: 1)
+                builder.transitioner.willTransitionOptionally()
                 builder.state = .CreateEpsilon
             }
             builder.setAction("{") {
-                builder.transitioning = TransitionProperties(min: 0, max: 0)
+                builder.transitioner.willTransition(withMin: 0, andMax: 0)
                 builder.state = .ReadRepetitionValue
             }
             builder.setAction(",") {
-                builder.transitioning.minTransitionCount = builder.transitioning.maxTransitionCount
-                builder.transitioning.maxTransitionCount = 0
+                builder.transitioner.swapMaxToMinTransitionTimes()
                 builder.state = .ReadRepetitionValue
             }
             builder.setAction("}") {
-                if builder.transitioning.minTransitionCount < 1 {
-                    builder.transitioning.minTransitionCount = builder.transitioning.maxTransitionCount
-                }
+                builder.transitioner.setExactTransitionTimes()
                 builder.state = .CreateEpsilon
             }
             builder.setAction(builder.escapeChar) {
