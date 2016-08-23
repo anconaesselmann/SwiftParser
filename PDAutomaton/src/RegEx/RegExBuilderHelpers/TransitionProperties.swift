@@ -12,5 +12,10 @@ extension RegExBuilder {
             minTransitionCount = min
             maxTransitionCount = max
         }
+        func appendMaxCount(withChar char:Character) -> Bool {
+            guard let newInt = Int("\(char)") else {return false}
+            maxTransitionCount = maxTransitionCount * 10 + newInt
+            return true
+        }
     }
 }

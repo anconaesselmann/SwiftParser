@@ -397,5 +397,12 @@ class RegExTests: XCTestCase {
         XCTAssertEqual(match, nil)
         XCTAssertEqual(re.matchLength, 0)
     }
-    
+//    func test_atomicGrouping_catastrophicBacktrackingExample() {
+//        re.pattern = "a(.*.*)*b"
+//        print(re.machine)
+//        
+//        match = re.match(subject: "baaaaaab")
+//        XCTAssertEqual(match, 1)
+//        XCTAssertEqual(re.matchLength, 7)
+//    }
 }

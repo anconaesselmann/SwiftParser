@@ -5,26 +5,28 @@ class RegExBuilder {
     
     var machine:NPDAutomaton! {
         didSet {
-            linking = LinkingProperties()
-            resetTransitionCounts()
+            linking       = LinkingProperties()
+            transitioning = TransitionProperties()
         }
     }
     var regExString:String = ""
-    init(withPattern pattern:String) {regExString = pattern}
-    init(withPattern pattern:String, andEscapeChar char:Character) {
-        escapeChar  = char
-        regExString = pattern
-    }
     var linking:LinkingProperties!
-    var transitioning = TransitionProperties()
+    var transitioning = TransitionProperties() {
+        didSet {state = .Default}
+    }
     var state:RegExState = .Default
     var escapeChar:Character = "\\"
     private var currentTriggers:[Acceptable]        = []
     private var actions:[Character:ActionFunction]  = [:]
     private var specialChars:[Character:Acceptable] = [:]
     private let initializer = RegExBuilderInitializer()
-    
     var atomicGroupCreator:RegExBuilder?
+    
+    init(withPattern pattern:String) {regExString = pattern}
+    init(withPattern pattern:String, andEscapeChar char:Character) {
+        escapeChar  = char
+        regExString = pattern
+    }
     
     func commitPreviousTransactions() {
         guard shouldCommitTransaction() else {return}
@@ -58,7 +60,7 @@ class RegExBuilder {
     }
     func stageTransition(forChar char:Character) {
         guard state != .ReadRepetitionValue else {
-            updateTransitionCount(char)
+            _ = transitioning.appendMaxCount(withChar: char)
             return
         }
         currentTriggers.append(CharToken(char: char))
@@ -128,11 +130,8 @@ private extension RegExBuilder {
         return true
     }
     func shouldCommitTransaction() -> Bool {
-        // TODO: Split state into two, one governing committing, one governing other behaviour
-        guard state != .ReadOrBracket       else {return false}
-        guard state != .ReadRepetitionValue else {return false}
-        guard state != .ReadEscapedChar     else {return false}
-        guard currentTriggers.count > 0     else {return false}
+        guard state.shouldCommit else {return false}
+        guard currentTriggers.count > 0 else {return false}
         return true
     }
     func setTargetState() {
@@ -148,11 +147,7 @@ private extension RegExBuilder {
         )
         linking.origin.append(transition: epsilonTransition)
         machine.append(state: linking.origin)
-        resetTransitionCounts()
-    }
-    func updateTransitionCount(_ char:Character) {
-        guard let newInt = Int("\(char)") else {return}
-        transitioning.maxTransitionCount = transitioning.maxTransitionCount * 10 + newInt
+        transitioning = TransitionProperties()
     }
     func setAcceptingStates() {
         linking.target.accepting = true
@@ -172,9 +167,5 @@ private extension RegExBuilder {
             if symbol == char {return true}
         }
         return false
-    }
-    func resetTransitionCounts() {
-        transitioning = TransitionProperties()
-        state         = .Default
     }
 }

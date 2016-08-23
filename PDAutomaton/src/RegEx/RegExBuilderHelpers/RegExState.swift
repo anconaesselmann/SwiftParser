@@ -12,5 +12,11 @@ extension RegExBuilder {
         case AtomicGroupStart
         case AtomicGroupPassThrough
         case AtomicGroupFinished
+        var shouldCommit:Bool {
+            switch self {
+            case .ReadOrBracket, .ReadRepetitionValue, .ReadEscapedChar: return false
+            default: return true
+            }
+        }
     }
 }
