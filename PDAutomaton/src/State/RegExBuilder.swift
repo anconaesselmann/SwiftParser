@@ -53,10 +53,10 @@ class RegExBuilder {
     func set(specialChar:Acceptable, forChar char: Character) {
         specialChars[char] = specialChar
     }
-    func stageTransiton(token:Acceptable) {
+    func stageTransiton(forToken token:Acceptable) {
         currentTriggers.append(token)
     }
-    func stageTransition(char:Character) {
+    func stageTransition(forChar char:Character) {
         guard state != .ReadRepetitionValue else {
             updateTransitionCount(char)
             return
@@ -68,13 +68,11 @@ extension RegExBuilder: StateBuilder {
     func compile(machine:Automaton) -> Bool {
         guard compileSetup(machine: machine) else {return false}
         for char in regExString.characters {
-            guard processChar(char: char) else {return false}
+            guard process(char: char) else {return false}
         }
         compileFinish()
         return true
     }
-    
-    
     func compileSetup(machine:Automaton) -> Bool {
         guard let machine = machine as? NPDAutomaton else {return false}
         self.machine = machine
@@ -89,11 +87,19 @@ extension RegExBuilder: StateBuilder {
     }
 }
 private extension RegExBuilder {
-    func processAtomicGropuPassThrough(char:Character) -> Bool {
+    func process(char: Character) -> Bool {
+        guard !processAtomicGroupPassThrough(char) else {return true}
+        if isSpecialSymbol(char) {
+            return processSpecialSymbol(char)
+        } else {
+            return processRegularCharacter(char)
+        }
+    }
+    func processAtomicGroupPassThrough(_ char:Character) -> Bool {
         if state == .AtomicGroupPassThrough {
-            if atomicGroupCreator!.processChar(char: char) {
+            if atomicGroupCreator!.process(char: char) {
                 if atomicGroupCreator!.state == .AtomicGroupFinished {
-                    stageTransiton(token: atomicGroupCreator!.machine)
+                    stageTransiton(forToken: atomicGroupCreator!.machine)
                     atomicGroupCreator = nil
                     state = .Default
                 }
@@ -106,24 +112,21 @@ private extension RegExBuilder {
         if state == .AtomicGroupFinished {return true}
         return false
     }
-    func processChar(char: Character) -> Bool {
-        guard !processAtomicGropuPassThrough(char: char) else {return true}
-        if isSpecialSymbol(char: char) {
-            guard let actionFunction = actions[char] else {
-                guard let specialChar = specialChars[char] else {return false}
-                commitPreviousTransactions()
-                stageTransiton(token: specialChar)
-                return true
-            }
-            actionFunction()
-        } else {
-            print(char)
+    func processSpecialSymbol(_ char: Character) -> Bool {
+        guard let actionFunction = actions[char] else {
+            guard let specialChar = specialChars[char] else {return false}
             commitPreviousTransactions()
-            stageTransition(char: char)
+            stageTransiton(forToken: specialChar)
+            return true
         }
+        actionFunction()
         return true
     }
-    
+    func processRegularCharacter(_ char: Character) -> Bool {
+        commitPreviousTransactions()
+        stageTransition(forChar: char)
+        return true
+    }
     func shouldCommitTransaction() -> Bool {
         // TODO: Split state into two, one governing committing, one governing other behaviour
         guard state != .ReadOrBracket       else {return false}
@@ -154,7 +157,7 @@ private extension RegExBuilder {
     func setAcceptingStates() {
         linking.target.accepting = true
     }
-    func isSpecialSymbol(char: Character) -> Bool {
+    func isSpecialSymbol(_ char: Character) -> Bool {
         if state == .ReadEscapedChar {
             state = .Default
             for (symbol, _) in specialChars {

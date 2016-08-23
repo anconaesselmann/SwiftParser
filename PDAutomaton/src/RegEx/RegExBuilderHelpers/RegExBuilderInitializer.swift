@@ -55,7 +55,7 @@ extension RegExBuilder {
             }
             builder.setAction(".") {
                 builder.commitPreviousTransactions()
-                builder.stageTransiton(token: AnyToken())
+                builder.stageTransiton(forToken: AnyToken())
             }
             builder.setAction("(") {
                 builder.commitPreviousTransactions()
